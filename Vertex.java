@@ -1,5 +1,3 @@
-package projekt;
-
 /**
  * Klasa Vertex ce sluziti kao klasa Point u algoritmima pronalaska puta, samo sto jos
  * treba imati informacije o prethodnom cvoru / roditelju te podatke o ukupnoj duzini

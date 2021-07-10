@@ -1,8 +1,8 @@
 import java.sql.*;
 
 public class DbConnection {
-    String imeBaze = " test.db";
-    String url = " jdbc:sqlite:" + imeBaze;
+    String imeBaze = "test.db";
+    String url = "jdbc:sqlite:" + imeBaze;
 
     void createTables() {
         String sql = """

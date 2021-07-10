@@ -1,4 +1,3 @@
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -65,7 +64,7 @@ public class Form extends javax.swing.JFrame {
             }
         }
 
-        private void paintCell(Vertex cell, Graphics g, Color color){
+        private void paintCell(Vertex cell, Graphics g, Color color) {
             if (cell != null) {
                 int cellX = cellSize + (cell.getX() * cellSize);
                 int cellY = cellSize + (cell.getY() * cellSize);
@@ -74,14 +73,14 @@ public class Form extends javax.swing.JFrame {
             }
         }
 
-        private void paintCells(List<Vertex> cells, Graphics g, Color color){
-                for (Vertex fillCell : cells) {
-                    int cellX = cellSize + (fillCell.getX() * cellSize);
-                    int cellY = cellSize + (fillCell.getY() * cellSize);
-                    g.setColor(color);
-                    g.fillRect(cellX, cellY, cellSize, cellSize);
-                }
+        private void paintCells(List<Vertex> cells, Graphics g, Color color) {
+            for (Vertex fillCell : cells) {
+                int cellX = cellSize + (fillCell.getX() * cellSize);
+                int cellY = cellSize + (fillCell.getY() * cellSize);
+                g.setColor(color);
+                g.fillRect(cellX, cellY, cellSize, cellSize);
             }
+        }
 
         // funkcije koja crza mrežu (linije, boja kvadratiće)
         @Override
@@ -95,7 +94,7 @@ public class Form extends javax.swing.JFrame {
 
             // bojenje otvorenih
             paintCells(openedCells, g, Color.BLUE);
-            
+
             //bojanje zatvorenih cvorova
             paintCells(visitedCells, g, Color.MAGENTA);
 
@@ -126,12 +125,13 @@ public class Form extends javax.swing.JFrame {
             openedCells.add(new Vertex(x, y));
             repaint();
         }
-        
+
         public void visitedCell(int x, int y) {
-            visitedCells.add(new Vertex(x ,y));
+            visitedCells.add(new Vertex(x, y));
             repaint();
         }
-        public void removeOpenedCell( Vertex v ) {
+
+        public void removeOpenedCell(Vertex v) {
             openedCells.remove(v);
             repaint();
         }
@@ -167,10 +167,10 @@ public class Form extends javax.swing.JFrame {
             }
         }
 
-//      bfs i dfs se razlikuju samo jel uzimamo s početka ili s kraja liste
+        //      bfs i dfs se razlikuju samo jel uzimamo s početka ili s kraja liste
         public void xfs() {
             int ind = 0;
-            if(algorithm.equals("DFS")) ind = openedNodes.size()-1;
+            if (algorithm.equals("DFS")) ind = openedNodes.size() - 1;
             Vertex current = openedNodes.get(ind);
             openedNodes.remove(ind);
             if (visitedNodes.contains(current)) return;
@@ -178,6 +178,9 @@ public class Form extends javax.swing.JFrame {
 
             openedCell(current.getX(), current.getY());
             currentCell = current;
+
+            visitedCell(current.getX(), current.getY());
+            removeOpenedCell(current);
 
             int newX = current.getX();
             int newY = current.getY();
@@ -187,10 +190,26 @@ public class Form extends javax.swing.JFrame {
                 return;
             }
 
-            if(newX - 1 > -1) openedNodes.add(new Vertex(newX - 1, newY));
-            if(newY - 1 > -1) openedNodes.add(new Vertex(newX, newY - 1));
-            if(newX + 1 < 80) openedNodes.add(new Vertex(newX + 1, newY));
-            if(newY + 1 < 50) openedNodes.add(new Vertex(newX, newY + 1));
+            if (newX - 1 > -1) {
+                Vertex v = new Vertex(newX - 1, newY);
+                openedNodes.add(v);
+                openedCell(v.getX(), v.getY());
+            }
+            if (newY - 1 > -1) {
+                Vertex v = new Vertex(newX, newY - 1);
+                openedNodes.add(v);
+                openedCell(v.getX(), v.getY());
+            }
+            if (newX + 1 < 80) {
+                Vertex v = new Vertex(newX + 1, newY);
+                openedNodes.add(v);
+                openedCell(v.getX(), v.getY());
+            }
+            if (newY + 1 < 50) {
+                Vertex v = new Vertex(newX, newY + 1);
+                openedNodes.add(v);
+                openedCell(v.getX(), v.getY());
+            }
         }
 
 
@@ -217,18 +236,18 @@ public class Form extends javax.swing.JFrame {
                 startEndCell(stX, stY);
                 startEndCell(enX, enY);
                 clock.start();
-                
-                
+
+
             }
         }
-        
-        private void pokretanjeWorkera(java.awt.event.ActionEvent evt) {                                         
-            if(algorithm.equals("Dijkstra")){
-                    //Dio koji poziva SwingWorkera koji pretrazuje graf u zasebnoj dretvi.
-                    SwingWorker<Boolean, Vertex> dijsktraSearch = new PathWorker(this); 
-                    dijsktraSearch.execute();
+
+        private void pokretanjeWorkera(java.awt.event.ActionEvent evt) {
+            if (algorithm.equals("Dijkstra")) {
+                //Dio koji poziva SwingWorkera koji pretrazuje graf u zasebnoj dretvi.
+                SwingWorker<Boolean, Vertex> dijsktraSearch = new PathWorker(this);
+                dijsktraSearch.execute();
             }
-        }  
+        }
 
         // nova pretraga -- čistimo sva potrebna polja i iscrtavamo ponovno mrežu
         public class newButtonPushed implements ActionListener {
@@ -330,9 +349,9 @@ public class Form extends javax.swing.JFrame {
                 startButton.setText("Start");
                 startButton.addActionListener(grid.new startButtonPushed());
                 startButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    grid.pokretanjeWorkera(evt);
-                }
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        grid.pokretanjeWorkera(evt);
+                    }
                 });
                 menu.add(startButton);
 
