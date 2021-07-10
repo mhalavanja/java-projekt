@@ -1,12 +1,10 @@
-package projekt;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
-import javax.swing.Timer;
+//import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,7 +32,7 @@ public class Form extends javax.swing.JFrame {
         protected int numOfY = 50;
         protected int cellSize = 10;
         protected int startX = 0, startY = 0, endX = 0, endY = 0;
-        Timer clock = new Timer(20, this);
+        //Timer clock = new Timer(20, this);
         protected ArrayList<Vertex> openedNodes = new ArrayList<>(numOfX * numOfY);
         protected ArrayList<Vertex> visitedNodes = new ArrayList<>(numOfX * numOfY);
         protected boolean found = false;
@@ -51,21 +49,22 @@ public class Form extends javax.swing.JFrame {
             this.algorithm = algorithm;
         }
 
-        // otkuvaj sata omogućuje iscrtavanje mreže (treba neki događaj da bi 
-        // se mreža ponovno istrtala)
+        
+        // možda za klik miša kasnije bude trebalo...
         @Override
         public void actionPerformed(ActionEvent arg0) {
             // moze elseif-ovi u ovisnosti koji algoritam koristimo
+            /*
             repaint();
+            
             if (found) {
                 clock.stop();
             } 
             //ovo maknuti kad se prebaci na workera
-            else if (algorithm.equals("findPath")) {
-                findPath();
-            } else if (algorithm.equals("BFS") || algorithm.equals("DFS")) {
+    
+            else if (algorithm.equals("BFS") || algorithm.equals("DFS")) {
                 xfs();
-            }
+            }*/
         }
 
         private void paintCell(Vertex cell, Graphics g, Color color) {
@@ -140,84 +139,10 @@ public class Form extends javax.swing.JFrame {
             repaint();
         }
 
-        // algoritam za pretragu, poziva se na otkucaj sata i refresha otvorene čvorove...
-        public void findPath() {
-            Vertex current = openedNodes.get(0);
-            visitedNodes.add(current);
-            openedNodes.remove(0);
-
-
-            visitedCell(current.getX(), current.getY());
-            removeOpenedCell(current);
-            currentCell = current;
-
-            for (int i = -1; i < 2; ++i) {
-                for (int j = -1; j < 2; ++j) {
-                    int newX = current.getX() + i;
-                    int newY = current.getY() + j;
-                    if (newX == endX && newY == endY) {
-                        System.out.println("Put pronađen.");
-                        found = true;
-                        return;
-                    }
-                    if (newX >= 0 && newY >= 0 && newX < numOfX && newY < numOfY) {
-                        Vertex newPoint = new Vertex(newX, newY);
-                        if (!visitedNodes.contains(newPoint) && !openedNodes.contains(newPoint)) {
-                            openedNodes.add(newPoint);
-                            openedCell(newPoint.getX(), newPoint.getY());
-                        }
-                    }
-                }
-            }
-        }
-
-        //      bfs i dfs se razlikuju samo jel uzimamo s početka ili s kraja liste
-        public void xfs() {
-            int ind = 0;
-            if (algorithm.equals("DFS")) ind = openedNodes.size() - 1;
-            Vertex current = openedNodes.get(ind);
-            openedNodes.remove(ind);
-            if (visitedNodes.contains(current)) return;
-            visitedNodes.add(current);
-
-            openedCell(current.getX(), current.getY());
-            currentCell = current;
-
-            visitedCell(current.getX(), current.getY());
-            removeOpenedCell(current);
-
-            int newX = current.getX();
-            int newY = current.getY();
-            if (newX == endX && newY == endY) {
-                System.out.println("Put pronađen.");
-                found = true;
-                return;
-            }
-
-            if (newX - 1 > -1) {
-                Vertex v = new Vertex(newX - 1, newY);
-                openedNodes.add(v);
-                openedCell(v.getX(), v.getY());
-            }
-            if (newY - 1 > -1) {
-                Vertex v = new Vertex(newX, newY - 1);
-                openedNodes.add(v);
-                openedCell(v.getX(), v.getY());
-            }
-            if (newX + 1 < 80) {
-                Vertex v = new Vertex(newX + 1, newY);
-                openedNodes.add(v);
-                openedCell(v.getX(), v.getY());
-            }
-            if (newY + 1 < 50) {
-                Vertex v = new Vertex(newX, newY + 1);
-                openedNodes.add(v);
-                openedCell(v.getX(), v.getY());
-            }
-        }
-
         //Implementiramo realizaciju pritiska gumba start.
         private void startButtonPushed(java.awt.event.ActionEvent evt) {
+            
+            // dodati kontrolu unosa //////////////////////////////////////////////!!!
             StringTokenizer st = new StringTokenizer(start.getText());
             int stX = Integer.parseInt(st.nextToken());
             int stY = Integer.parseInt(st.nextToken());
@@ -230,16 +155,25 @@ public class Form extends javax.swing.JFrame {
             startY = stY;
             endX = enX;
             endY = enY;
-            openedNodes.add(new Vertex(startX, startY));
+            openedNodes.add(new Vertex(startX, startY)); // još u a* je vjj koristeno
+            openedCells.add(new Vertex(startX, startY));
 
             startEndCell(stX, stY);
             startEndCell(enX, enY);
-            clock.start();
+            //clock.start();
 
             if (algorithm.equals("A*")) {
                 //Dio koji poziva SwingWorkera koji pretrazuje graf u zasebnoj dretvi.
                 SwingWorker<Boolean, Vertex> dijsktraSearch = new PathWorker(this);
                 dijsktraSearch.execute();
+            }
+            else if(algorithm.equals("findPath")) {
+                SwingWorker<Boolean, Vertex> findPathSearch = new FindPathWorker(this);
+                findPathSearch.execute();
+            }
+            else if(algorithm.equals("DFS") || algorithm.equals("BFS")) {
+                SwingWorker<Boolean, Vertex> xfsSearch = new XfsPathWorker(this);
+                xfsSearch.execute();
             }
             //dodati ovdje pokretanje workera za ostale algoritme
             //kada se dodaju, onda maknuti pozivanje koraka algoritma kod otkucaja sata
