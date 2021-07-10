@@ -27,10 +27,13 @@ public class Form extends javax.swing.JFrame {
         private List<Point> startEndCells;
         private List<Point> openedCells;
         private Point currentCell;
+        int numOfX = 80;
+        int numOfY = 50;
+        int cellSize = 10;
         int startX = 0, startY = 0, endX = 0, endY = 0;
         Timer clock = new Timer(20, this);
-        ArrayList<Point> openedNodes = new ArrayList<>(80 * 80);
-        ArrayList<Point> visitedNodes = new ArrayList<>(80 * 80);
+        ArrayList<Point> openedNodes = new ArrayList<>(numOfX * numOfY);
+        ArrayList<Point> visitedNodes = new ArrayList<>(numOfX * numOfY);
         boolean found = false;
         String algorithm = "";
 
@@ -38,8 +41,8 @@ public class Form extends javax.swing.JFrame {
         JTextArea end = new JTextArea();
 
         public Grid(String algorithm) {
-            startEndCells = new ArrayList<>(25);
-            openedCells = new ArrayList<>(80 * 80);
+            startEndCells = new ArrayList<>(2);
+            openedCells = new ArrayList<>(numOfX * numOfY);
             Point currentCell = null;
             this.algorithm = algorithm;
         }
@@ -50,50 +53,58 @@ public class Form extends javax.swing.JFrame {
         public void actionPerformed(ActionEvent arg0) {
             // moze elseif-ovi u ovisnosti koji algoritam koristimo
             repaint();
-            System.out.println(algorithm);
             if (found) {
                 clock.stop();
             } else if (algorithm.equals("findPath")) {
                 findPath();
-            } else if (algorithm.equals("BFS")) {
-                bfs();
+            } else if (algorithm.equals("BFS") || algorithm.equals("DFS")) {
+                xfs();
             }
         }
+
+        private void paintCell(Point cell, Graphics g, Color color){
+            if (cell != null) {
+                int cellX = cellSize + (cell.x * cellSize);
+                int cellY = cellSize + (cell.y * cellSize);
+                g.setColor(color);
+                g.fillRect(cellX, cellY, cellSize, cellSize);
+            }
+        }
+
+        private void paintCells(List<Point> cells, Graphics g, Color color){
+                for (Point fillCell : cells) {
+                    int cellX = cellSize + (fillCell.x * cellSize);
+                    int cellY = cellSize + (fillCell.y * cellSize);
+                    g.setColor(color);
+                    g.fillRect(cellX, cellY, cellSize, cellSize);
+                }
+            }
 
         // funkcije koja crza mrežu (linije, boja kvadratiće)
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            for (Point fillCell : startEndCells) {
-                int cellX = 10 + (fillCell.x * 10);
-                int cellY = 10 + (fillCell.y * 10);
-                g.setColor(Color.RED);
-                g.fillRect(cellX, cellY, 10, 10);
-            }
+            int width = numOfX * cellSize;
+            int height = numOfY * cellSize;
+
+            //bojanje pocetne i zavrsne celije
+            paintCells(startEndCells, g, Color.RED);
+
             // bojenje otvorenih
-            for (Point fillCell : openedCells) {
-                int cellX = 10 + (fillCell.x * 10);
-                int cellY = 10 + (fillCell.y * 10);
-                g.setColor(Color.BLUE);
-                g.fillRect(cellX, cellY, 10, 10);
-            }
+            paintCells(openedCells, g, Color.BLUE);
+
             //bojanje trenutno otvorenog
-            if (currentCell != null) {
-                int cellX = 10 + (currentCell.x * 10);
-                int cellY = 10 + (currentCell.y * 10);
-                g.setColor(Color.GREEN);
-                g.fillRect(cellX, cellY, 10, 10);
-            }
+            paintCell(currentCell, g, Color.GREEN);
 
             g.setColor(Color.BLACK);
-            g.drawRect(10, 10, 800, 500);
+            g.drawRect(cellSize, cellSize, width, height);
 
-            for (int i = 10; i <= 800; i += 10) {
-                g.drawLine(i, 10, i, 510);
+            for (int i = cellSize; i <= width; i += cellSize) {
+                g.drawLine(i, cellSize, i, height + cellSize);
             }
 
-            for (int i = 10; i <= 500; i += 10) {
-                g.drawLine(10, i, 810, i);
+            for (int i = cellSize; i <= height; i += cellSize) {
+                g.drawLine(cellSize, i, width + cellSize, i);
             }
         }
 
@@ -142,10 +153,12 @@ public class Form extends javax.swing.JFrame {
             }
         }
 
-        public void bfs() {
-            System.out.println("AAA" + openedNodes);
-            Point current = openedNodes.get(0);
-            openedNodes.remove(0);
+//      bfs i dfs se razlikuju samo jel uzimamo s početka ili s kraja liste
+        public void xfs() {
+            int ind = 0;
+            if(algorithm.equals("DFS")) ind = openedNodes.size()-1;
+            Point current = openedNodes.get(ind);
+            openedNodes.remove(ind);
             if (visitedNodes.contains(current)) return;
             visitedNodes.add(current);
 
@@ -163,8 +176,7 @@ public class Form extends javax.swing.JFrame {
             if(newX - 1 > -1) openedNodes.add(new Point(newX - 1, newY));
             if(newY - 1 > -1) openedNodes.add(new Point(newX, newY - 1));
             if(newX + 1 < 80) openedNodes.add(new Point(newX + 1, newY));
-            if(newY + 1 < 80) openedNodes.add(new Point(newX, newY + 1));
-            System.out.println(openedNodes + "BBB");
+            if(newY + 1 < 50) openedNodes.add(new Point(newX, newY + 1));
         }
 
 
@@ -221,7 +233,6 @@ public class Form extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 algorithm = Objects.requireNonNull(algorithmComboBox.getSelectedItem()).toString();
-//                System.out.println(algorithm);
             }
         }
     }
