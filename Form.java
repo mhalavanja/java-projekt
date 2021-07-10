@@ -1,3 +1,5 @@
+package projekt;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -24,18 +26,18 @@ public class Form extends javax.swing.JFrame {
 
     public static class Grid extends JPanel implements ActionListener {
 
-        private List<Point> startEndCells;
-        private List<Point> openedCells;
-        private Point currentCell;
-        int numOfX = 80;
-        int numOfY = 50;
-        int cellSize = 10;
-        int startX = 0, startY = 0, endX = 0, endY = 0;
+        protected List<Vertex> startEndCells;
+        protected List<Vertex> openedCells;
+        protected Vertex currentCell;
+        protected int numOfX = 80;
+        protected int numOfY = 50;
+        protected int cellSize = 10;
+        protected int startX = 0, startY = 0, endX = 0, endY = 0;
         Timer clock = new Timer(20, this);
-        ArrayList<Point> openedNodes = new ArrayList<>(numOfX * numOfY);
-        ArrayList<Point> visitedNodes = new ArrayList<>(numOfX * numOfY);
-        boolean found = false;
-        String algorithm = "";
+        protected ArrayList<Vertex> openedNodes = new ArrayList<>(numOfX * numOfY);
+        protected ArrayList<Vertex> visitedNodes = new ArrayList<>(numOfX * numOfY);
+        protected boolean found = false;
+        protected String algorithm = "";
 
         JTextArea start = new JTextArea();
         JTextArea end = new JTextArea();
@@ -43,7 +45,7 @@ public class Form extends javax.swing.JFrame {
         public Grid(String algorithm) {
             startEndCells = new ArrayList<>(2);
             openedCells = new ArrayList<>(numOfX * numOfY);
-            Point currentCell = null;
+            Vertex currentCell = null;
             this.algorithm = algorithm;
         }
 
@@ -62,19 +64,19 @@ public class Form extends javax.swing.JFrame {
             }
         }
 
-        private void paintCell(Point cell, Graphics g, Color color){
+        private void paintCell(Vertex cell, Graphics g, Color color){
             if (cell != null) {
-                int cellX = cellSize + (cell.x * cellSize);
-                int cellY = cellSize + (cell.y * cellSize);
+                int cellX = cellSize + (cell.getX() * cellSize);
+                int cellY = cellSize + (cell.getY() * cellSize);
                 g.setColor(color);
                 g.fillRect(cellX, cellY, cellSize, cellSize);
             }
         }
 
-        private void paintCells(List<Point> cells, Graphics g, Color color){
-                for (Point fillCell : cells) {
-                    int cellX = cellSize + (fillCell.x * cellSize);
-                    int cellY = cellSize + (fillCell.y * cellSize);
+        private void paintCells(List<Vertex> cells, Graphics g, Color color){
+                for (Vertex fillCell : cells) {
+                    int cellX = cellSize + (fillCell.getX() * cellSize);
+                    int cellY = cellSize + (fillCell.getY() * cellSize);
                     g.setColor(color);
                     g.fillRect(cellX, cellY, cellSize, cellSize);
                 }
@@ -111,13 +113,13 @@ public class Form extends javax.swing.JFrame {
         // dodavanje početnog i završnog čvora, potrebno za iscrtavanje
         // (početni i završni su crvene boje)
         public void startEndCell(int x, int y) {
-            startEndCells.add(new Point(x, y));
+            startEndCells.add(new Vertex(x, y));
             repaint();
         }
 
         // dodavanje otvorenih čvorova
         public void openedCell(int x, int y) {
-            openedCells.add(new Point(x, y));
+            openedCells.add(new Vertex(x, y));
             repaint();
         }
 
@@ -126,25 +128,25 @@ public class Form extends javax.swing.JFrame {
             final int minCellIndex = 0;
             final int maxCellIndex = 80;
 
-            Point current = openedNodes.get(0);
+            Vertex current = openedNodes.get(0);
             visitedNodes.add(current);
             openedNodes.remove(0);
 
 
-            openedCell(current.x, current.y);
+            openedCell(current.getX(), current.getY());
             currentCell = current;
 
             for (int i = -1; i < 2; ++i) {
                 for (int j = -1; j < 2; ++j) {
-                    int newX = current.x + i;
-                    int newY = current.y + j;
+                    int newX = current.getX() + i;
+                    int newY = current.getY() + j;
                     if (newX == endX && newY == endY) {
                         System.out.println("Put pronađen.");
                         found = true;
                         return;
                     }
                     if (newX >= minCellIndex && newY >= minCellIndex && newX < maxCellIndex) {
-                        Point newPoint = new Point(newX, newY);
+                        Vertex newPoint = new Vertex(newX, newY);
                         if (!visitedNodes.contains(newPoint) && !openedNodes.contains(newPoint)) {
                             openedNodes.add(newPoint);
                         }
@@ -157,26 +159,26 @@ public class Form extends javax.swing.JFrame {
         public void xfs() {
             int ind = 0;
             if(algorithm.equals("DFS")) ind = openedNodes.size()-1;
-            Point current = openedNodes.get(ind);
+            Vertex current = openedNodes.get(ind);
             openedNodes.remove(ind);
             if (visitedNodes.contains(current)) return;
             visitedNodes.add(current);
 
-            openedCell(current.x, current.y);
+            openedCell(current.getX(), current.getY());
             currentCell = current;
 
-            int newX = current.x;
-            int newY = current.y;
+            int newX = current.getX();
+            int newY = current.getY();
             if (newX == endX && newY == endY) {
                 System.out.println("Put pronađen.");
                 found = true;
                 return;
             }
 
-            if(newX - 1 > -1) openedNodes.add(new Point(newX - 1, newY));
-            if(newY - 1 > -1) openedNodes.add(new Point(newX, newY - 1));
-            if(newX + 1 < 80) openedNodes.add(new Point(newX + 1, newY));
-            if(newY + 1 < 50) openedNodes.add(new Point(newX, newY + 1));
+            if(newX - 1 > -1) openedNodes.add(new Vertex(newX - 1, newY));
+            if(newY - 1 > -1) openedNodes.add(new Vertex(newX, newY - 1));
+            if(newX + 1 < 80) openedNodes.add(new Vertex(newX + 1, newY));
+            if(newY + 1 < 50) openedNodes.add(new Vertex(newX, newY + 1));
         }
 
 
@@ -198,7 +200,7 @@ public class Form extends javax.swing.JFrame {
                 startY = stY;
                 endX = enX;
                 endY = enY;
-                openedNodes.add(new Point(startX, startY));
+                openedNodes.add(new Vertex(startX, startY));
 
                 startEndCell(stX, stY);
                 startEndCell(enX, enY);
