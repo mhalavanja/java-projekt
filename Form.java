@@ -1,3 +1,5 @@
+package projekt;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -57,7 +59,9 @@ public class Form extends javax.swing.JFrame {
             repaint();
             if (found) {
                 clock.stop();
-            } else if (algorithm.equals("findPath")) {
+            } 
+            //ovo maknuti kad se prebaci na workera
+            else if (algorithm.equals("findPath")) {
                 findPath();
             } else if (algorithm.equals("BFS") || algorithm.equals("DFS")) {
                 xfs();
@@ -212,41 +216,33 @@ public class Form extends javax.swing.JFrame {
             }
         }
 
+        //Implementiramo realizaciju pritiska gumba start.
+        private void startButtonPushed(java.awt.event.ActionEvent evt) {
+            StringTokenizer st = new StringTokenizer(start.getText());
+            int stX = Integer.parseInt(st.nextToken());
+            int stY = Integer.parseInt(st.nextToken());
 
-        // kad kliknemo start čitamo početni i završni čvor i počinje pretraga(sat start)
-        public class startButtonPushed implements ActionListener {
+            StringTokenizer ste = new StringTokenizer(end.getText());
+            int enX = Integer.parseInt(ste.nextToken());
+            int enY = Integer.parseInt(ste.nextToken());
 
-            @Override
-            public void actionPerformed(ActionEvent event) {
+            startX = stX;
+            startY = stY;
+            endX = enX;
+            endY = enY;
+            openedNodes.add(new Vertex(startX, startY));
 
-                StringTokenizer st = new StringTokenizer(start.getText());
-                int stX = Integer.parseInt(st.nextToken());
-                int stY = Integer.parseInt(st.nextToken());
+            startEndCell(stX, stY);
+            startEndCell(enX, enY);
+            clock.start();
 
-                StringTokenizer ste = new StringTokenizer(end.getText());
-                int enX = Integer.parseInt(ste.nextToken());
-                int enY = Integer.parseInt(ste.nextToken());
-
-                startX = stX;
-                startY = stY;
-                endX = enX;
-                endY = enY;
-                openedNodes.add(new Vertex(startX, startY));
-
-                startEndCell(stX, stY);
-                startEndCell(enX, enY);
-                clock.start();
-
-
-            }
-        }
-
-        private void pokretanjeWorkera(java.awt.event.ActionEvent evt) {
-            if (algorithm.equals("Dijkstra")) {
+            if (algorithm.equals("A*")) {
                 //Dio koji poziva SwingWorkera koji pretrazuje graf u zasebnoj dretvi.
                 SwingWorker<Boolean, Vertex> dijsktraSearch = new PathWorker(this);
                 dijsktraSearch.execute();
             }
+            //dodati ovdje pokretanje workera za ostale algoritme
+            //kada se dodaju, onda maknuti pozivanje koraka algoritma kod otkucaja sata
         }
 
         // nova pretraga -- čistimo sva potrebna polja i iscrtavamo ponovno mrežu
@@ -347,10 +343,10 @@ public class Form extends javax.swing.JFrame {
 
                 JButton startButton = new JButton();
                 startButton.setText("Start");
-                startButton.addActionListener(grid.new startButtonPushed());
+                //startButton.addActionListener(grid.new startButtonPushed());
                 startButton.addActionListener(new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        grid.pokretanjeWorkera(evt);
+                        grid.startButtonPushed(evt);
                     }
                 });
                 menu.add(startButton);
