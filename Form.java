@@ -1,4 +1,3 @@
-package projekt;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -28,6 +27,7 @@ public class Form extends javax.swing.JFrame {
 
         protected List<Vertex> startEndCells;
         protected List<Vertex> openedCells;
+        protected List<Vertex> visitedCells;
         protected Vertex currentCell;
         protected int numOfX = 80;
         protected int numOfY = 50;
@@ -45,6 +45,7 @@ public class Form extends javax.swing.JFrame {
         public Grid(String algorithm) {
             startEndCells = new ArrayList<>(2);
             openedCells = new ArrayList<>(numOfX * numOfY);
+            visitedCells = new ArrayList<>(numOfX * numOfY);
             Vertex currentCell = null;
             this.algorithm = algorithm;
         }
@@ -93,10 +94,10 @@ public class Form extends javax.swing.JFrame {
             paintCells(startEndCells, g, Color.RED);
 
             // bojenje otvorenih
-            paintCells(openedCells, g, Color.MAGENTA);
+            paintCells(openedCells, g, Color.BLUE);
             
             //bojanje zatvorenih cvorova
-            paintCells(visitedNodes, g, Color.BLUE);
+            paintCells(visitedCells, g, Color.MAGENTA);
 
             //bojanje trenutno otvorenog
             paintCell(currentCell, g, Color.GREEN);
@@ -125,18 +126,25 @@ public class Form extends javax.swing.JFrame {
             openedCells.add(new Vertex(x, y));
             repaint();
         }
+        
+        public void visitedCell(int x, int y) {
+            visitedCells.add(new Vertex(x ,y));
+            repaint();
+        }
+        public void removeOpenedCell( Vertex v ) {
+            openedCells.remove(v);
+            repaint();
+        }
 
         // algoritam za pretragu, poziva se na otkucaj sata i refresha otvorene čvorove...
         public void findPath() {
-            final int minCellIndex = 0;
-            final int maxCellIndex = 80;
-
             Vertex current = openedNodes.get(0);
             visitedNodes.add(current);
             openedNodes.remove(0);
 
 
-            openedCell(current.getX(), current.getY());
+            visitedCell(current.getX(), current.getY());
+            removeOpenedCell(current);
             currentCell = current;
 
             for (int i = -1; i < 2; ++i) {
@@ -148,10 +156,11 @@ public class Form extends javax.swing.JFrame {
                         found = true;
                         return;
                     }
-                    if (newX >= minCellIndex && newY >= minCellIndex && newX < maxCellIndex) {
+                    if (newX >= 0 && newY >= 0 && newX < numOfX && newY < numOfY) {
                         Vertex newPoint = new Vertex(newX, newY);
                         if (!visitedNodes.contains(newPoint) && !openedNodes.contains(newPoint)) {
                             openedNodes.add(newPoint);
+                            openedCell(newPoint.getX(), newPoint.getY());
                         }
                     }
                 }
@@ -231,6 +240,7 @@ public class Form extends javax.swing.JFrame {
                 openedCells.clear();
                 openedNodes.clear();
                 visitedNodes.clear();
+                visitedCells.clear();
                 found = false;
                 currentCell = null;
                 repaint();
