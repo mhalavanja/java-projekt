@@ -93,7 +93,10 @@ public class Form extends javax.swing.JFrame {
             paintCells(startEndCells, g, Color.RED);
 
             // bojenje otvorenih
-            paintCells(openedCells, g, Color.BLUE);
+            paintCells(openedCells, g, Color.MAGENTA);
+            
+            //bojanje zatvorenih cvorova
+            paintCells(visitedNodes, g, Color.BLUE);
 
             //bojanje trenutno otvorenog
             paintCell(currentCell, g, Color.GREEN);
@@ -205,8 +208,18 @@ public class Form extends javax.swing.JFrame {
                 startEndCell(stX, stY);
                 startEndCell(enX, enY);
                 clock.start();
+                
+                
             }
         }
+        
+        private void pokretanjeWorkera(java.awt.event.ActionEvent evt) {                                         
+            if(algorithm.equals("Dijkstra")){
+                    //Dio koji poziva SwingWorkera koji pretrazuje graf u zasebnoj dretvi.
+                    SwingWorker<Boolean, Vertex> dijsktraSearch = new PathWorker(this); 
+                    dijsktraSearch.execute();
+            }
+        }  
 
         // nova pretraga -- čistimo sva potrebna polja i iscrtavamo ponovno mrežu
         public class newButtonPushed implements ActionListener {
@@ -306,6 +319,11 @@ public class Form extends javax.swing.JFrame {
                 JButton startButton = new JButton();
                 startButton.setText("Start");
                 startButton.addActionListener(grid.new startButtonPushed());
+                startButton.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    grid.pokretanjeWorkera(evt);
+                }
+                });
                 menu.add(startButton);
 
                 JButton newButton = new JButton();
