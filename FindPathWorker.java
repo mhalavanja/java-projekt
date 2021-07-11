@@ -42,7 +42,8 @@ public class FindPathWorker extends SwingWorker<Boolean, Vertex>{
                     }
                     if (newX >= 0 && newY >= 0 && newX < proc.numOfX && newY < proc.numOfY) {
                         Vertex newPoint = new Vertex(newX, newY);
-                        if (!proc.visitedCells.contains(newPoint) && !proc.openedCells.contains(newPoint)) {
+                        if (!proc.visitedCells.contains(newPoint) && !proc.openedCells.contains(newPoint)
+                                && !proc.wallCells.contains(newPoint)) {
                             proc.openedCell(newPoint.getX(), newPoint.getY());
                         }
                     }

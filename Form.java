@@ -9,7 +9,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
-
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Form extends javax.swing.JFrame {
 
@@ -27,28 +28,46 @@ public class Form extends javax.swing.JFrame {
         protected List<Vertex> startEndCells;
         protected List<Vertex> openedCells;
         protected List<Vertex> visitedCells;
+        protected List<Vertex> wallCells;
         protected Vertex currentCell;
         protected int numOfX = 80;
         protected int numOfY = 50;
         protected int cellSize = 10;
         protected int startX = 0, startY = 0, endX = 0, endY = 0;
         //Timer clock = new Timer(20, this);
-        protected ArrayList<Vertex> openedNodes = new ArrayList<>(numOfX * numOfY);
+        protected ArrayList<Vertex> openedNodes = new ArrayList<>(numOfX * numOfY); // mislim da su još u a* ostali s nodes
         protected ArrayList<Vertex> visitedNodes = new ArrayList<>(numOfX * numOfY);
         protected boolean found = false;
         protected String algorithm = "";
 
         JTextArea start = new JTextArea();
         JTextArea end = new JTextArea();
+        
 
         public Grid(String algorithm) {
             startEndCells = new ArrayList<>(2);
             openedCells = new ArrayList<>(numOfX * numOfY);
             visitedCells = new ArrayList<>(numOfX * numOfY);
+            wallCells = new ArrayList<>(numOfX * numOfY);
             Vertex currentCell = null;
             this.algorithm = algorithm;
+          
+            // klikom miša crtamo zid, trebalo bi dodat da samo funkcionira
+            // od pokretanja aplikacije do start i od new do start (neki boolean)
+            // ali to cemo valjda kad budemo sve gumbe regulirali kad mogu radit a kad ne
+            MouseAdapter handler = new MouseAdapter() { 
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    wallCell(e.getX()/cellSize -1,e.getY()/cellSize -1);
+                }
+                @Override
+                public void mouseDragged(MouseEvent e) {
+                    wallCell(e.getX()/cellSize -1,e.getY()/cellSize -1);
+                }
+            };
+            this.addMouseListener(handler);
+            this.addMouseMotionListener(handler);
         }
-
         
         // možda za klik miša kasnije bude trebalo...
         @Override
@@ -103,6 +122,9 @@ public class Form extends javax.swing.JFrame {
 
             //bojanje trenutno otvorenog
             paintCell(currentCell, g, Color.GREEN);
+            
+            //bojenje zidova
+            paintCells(wallCells, g, Color.BLACK);
 
             g.setColor(Color.BLACK);
             g.drawRect(cellSize, cellSize, width, height);
@@ -115,27 +137,44 @@ public class Form extends javax.swing.JFrame {
                 g.drawLine(cellSize, i, width + cellSize, i);
             }
         }
-
+        // nisam siguran je li treba dodati da ne ubacuje element ako ga već sadrži
+        // i je li 
+        
         // dodavanje početnog i završnog čvora, potrebno za iscrtavanje
         // (početni i završni su crvene boje)
         public void startEndCell(int x, int y) {
-            startEndCells.add(new Vertex(x, y));
+            if(!startEndCells.contains(new Vertex(x, y))) {
+                startEndCells.add(new Vertex(x, y));
+            }
             repaint();
         }
 
         // dodavanje otvorenih čvorova
         public void openedCell(int x, int y) {
-            openedCells.add(new Vertex(x, y));
+            if(!openedCells.contains(new Vertex(x, y))) {
+                openedCells.add(new Vertex(x, y));
+            }
+            repaint();
+        }
+        
+        public void wallCell(int x, int y) {
+            if(!wallCells.contains(new Vertex(x, y))) {
+                wallCells.add(new Vertex(x, y));
+            }
             repaint();
         }
 
         public void visitedCell(int x, int y) {
-            visitedCells.add(new Vertex(x, y));
+            if(!visitedCells.contains(new Vertex(x, y))) {
+                visitedCells.add(new Vertex(x, y));
+            }
             repaint();
         }
 
         public void removeOpenedCell(Vertex v) {
-            openedCells.remove(v);
+            if(openedCells.contains(v)) {
+                openedCells.remove(v);
+            }
             repaint();
         }
 
