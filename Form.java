@@ -58,11 +58,17 @@ public class Form extends javax.swing.JFrame {
             MouseAdapter handler = new MouseAdapter() { 
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    wallCell(e.getX()/cellSize -1,e.getY()/cellSize -1);
+                    if(e.getX()/cellSize -1 >= 0 && e.getX()/cellSize -1 < numOfX &&
+                            e.getY()/cellSize -1 >= 0 && e.getY()/cellSize -1 < numOfY) {
+                        wallCell(e.getX()/cellSize -1,e.getY()/cellSize -1);
+                    }
                 }
                 @Override
                 public void mouseDragged(MouseEvent e) {
-                    wallCell(e.getX()/cellSize -1,e.getY()/cellSize -1);
+                    if(e.getX()/cellSize -1 >= 0 && e.getX()/cellSize -1 < numOfX &&
+                            e.getY()/cellSize -1 >= 0 && e.getY()/cellSize -1 < numOfY) {
+                        wallCell(e.getX()/cellSize -1,e.getY()/cellSize -1);
+                    }
                 }
             };
             this.addMouseListener(handler);
