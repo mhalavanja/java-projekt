@@ -1,4 +1,4 @@
-
+package projekt;
 /**
  * Klasa Vertex ce sluziti kao klasa Point u algoritmima pronalaska puta, samo sto jos
  * treba imati informacije o prethodnom cvoru / roditelju te podatke o ukupnoj duzini
@@ -16,6 +16,9 @@ public class Vertex implements Comparable<Vertex>{
     //Pomocna varijabla koja ce se koristiti u SwingWorkeru kako bi se znalo je li
     //vrh otvoren ili obraden.
     private String tag;
+    
+    public Vertex(){
+    }
     
     public Vertex(int x, int y){
         this.x = x;
@@ -42,6 +45,10 @@ public class Vertex implements Comparable<Vertex>{
     }
     public String getTag(){
         return tag;
+    }
+    //Sluzi kod algoritama gdje je ukupna procejan = g(dosadasnji put) + h(procjena udaljenosti do cilja)
+    public double getF(){
+        return g + h;
     }
 
     //Set metode

@@ -1,3 +1,4 @@
+package projekt;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -8,9 +9,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.plaf.basic.BasicComboBoxUI.KeyHandler;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyListener;
+
 
 public class Form extends javax.swing.JFrame {
 
@@ -23,7 +29,7 @@ public class Form extends javax.swing.JFrame {
     // mreža proširuje objekt jPanel, u nju stavljamo sve potrebne elemente za rad 
     // algoritma pretrage
 
-    public static class Grid extends JPanel implements ActionListener {
+    public static class Grid extends JPanel implements ActionListener{
 
         protected List<Vertex> startEndCells;
         protected List<Vertex> openedCells;
@@ -39,6 +45,10 @@ public class Form extends javax.swing.JFrame {
         protected ArrayList<Vertex> visitedNodes = new ArrayList<>(numOfX * numOfY);
         protected boolean found = false;
         protected String algorithm = "";
+        
+        //Varijabla pressedKey ce sluziti kod postavljanja Start i End vrha pretrage. Mozemo 
+        //postaviti i da pretraga krene ukoliko se stisne space.
+        protected char pressedKey = '-';
 
         JTextArea start = new JTextArea();
         JTextArea end = new JTextArea();
@@ -58,21 +68,76 @@ public class Form extends javax.swing.JFrame {
             MouseAdapter handler = new MouseAdapter() { 
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if(e.getX()/cellSize -1 >= 0 && e.getX()/cellSize -1 < numOfX &&
-                            e.getY()/cellSize -1 >= 0 && e.getY()/cellSize -1 < numOfY) {
-                        wallCell(e.getX()/cellSize -1,e.getY()/cellSize -1);
+                    if(SwingUtilities.isLeftMouseButton(e)){
+                        if(e.getX()/cellSize -1 >= 0 && e.getX()/cellSize -1 < numOfX &&
+                                e.getY()/cellSize -1 >= 0 && e.getY()/cellSize -1 < numOfY) {
+                            
+                            int positionX = e.getX()/cellSize -1;
+                            int positionY = e.getY()/cellSize -1;
+                            //ako kliknemo lijevim klikom misa i drzimo tipku 'S' -> oznacavamo startni vrh
+                            if(pressedKey == 's'){
+                                System.out.println("S stisnut uz lijevi klik misa.");
+                                startX = positionX;
+                                startY = positionY;
+                            }
+                            else if(pressedKey == 'e'){
+                                endX = positionX;
+                                endY = positionY;
+                            }
+                            else{
+                                //Oznacili smo novi zid/prepreku.
+                                wallCell(positionX, positionY);
+                            }
+                        }
+                    }
+                    //Ukoliko stisnemo desni klik misa, micemo oznaceni zid.
+                    else if(SwingUtilities.isRightMouseButton(e)){
+                        if(e.getX()/cellSize -1 >= 0 && e.getX()/cellSize -1 < numOfX &&
+                                e.getY()/cellSize -1 >= 0 && e.getY()/cellSize -1 < numOfY) {
+                            removeWallCell(e.getX()/cellSize -1,e.getY()/cellSize -1);
+                        }
                     }
                 }
                 @Override
                 public void mouseDragged(MouseEvent e) {
-                    if(e.getX()/cellSize -1 >= 0 && e.getX()/cellSize -1 < numOfX &&
-                            e.getY()/cellSize -1 >= 0 && e.getY()/cellSize -1 < numOfY) {
-                        wallCell(e.getX()/cellSize -1,e.getY()/cellSize -1);
+                    if(SwingUtilities.isLeftMouseButton(e)){
+                        if(e.getX()/cellSize -1 >= 0 && e.getX()/cellSize -1 < numOfX &&
+                                e.getY()/cellSize -1 >= 0 && e.getY()/cellSize -1 < numOfY) {
+                            wallCell(e.getX()/cellSize -1,e.getY()/cellSize -1);
+                        }
+                    }
+                    //Drzanjem desnog klika misa i prelaskom preko zida, uklanjamo isti iz liste zidova.
+                    else if(SwingUtilities.isRightMouseButton(e)){
+                        if(e.getX()/cellSize -1 >= 0 && e.getX()/cellSize -1 < numOfX &&
+                                e.getY()/cellSize -1 >= 0 && e.getY()/cellSize -1 < numOfY) {
+                            removeWallCell(e.getX()/cellSize -1,e.getY()/cellSize -1);
+                        }
                     }
                 }
             };
             this.addMouseListener(handler);
             this.addMouseMotionListener(handler);
+            
+            KeyAdapter keyHandler = new KeyAdapter(){
+                //Pristiskom/drzanjem nekog gumba s tipkovnice pamtimo njegovu vrijednost - ukoliko se ne drzi 
+                //tipka defaultna vrijednost je '-' (taj nam znak nece sluziti za nikakvu akciju).
+                //Primjene su kod postavljanja stratnog i krajnjeg vrha, pokretanja algoritma sa space.
+                @Override
+                public void keyPressed(KeyEvent e){
+                    pressedKey = e.getKeyChar();
+                    System.out.println("Pritisnuta tipka " + pressedKey);
+                }
+                @Override
+                public void keyReleased(KeyEvent e){
+                    pressedKey = '-';
+                }
+                @Override
+                public void keyTyped(KeyEvent e){
+
+                    System.out.println("Pritisnuta tipka " + pressedKey);
+                }
+            };
+            this.addKeyListener(keyHandler);
         }
         
         // možda za klik miša kasnije bude trebalo...
@@ -91,6 +156,9 @@ public class Form extends javax.swing.JFrame {
                 xfs();
             }*/
         }
+        
+
+        
 
         private void paintCell(Vertex cell, Graphics g, Color color) {
             if (cell != null) {
@@ -117,20 +185,20 @@ public class Form extends javax.swing.JFrame {
             int width = numOfX * cellSize;
             int height = numOfY * cellSize;
 
-            //bojanje pocetne i zavrsne celije
-            paintCells(startEndCells, g, Color.RED);
-
             // bojenje otvorenih
             paintCells(openedCells, g, Color.BLUE);
 
             //bojanje zatvorenih cvorova
-            paintCells(visitedCells, g, Color.MAGENTA);
+            paintCells(visitedCells, g, Color.cyan);
 
             //bojanje trenutno otvorenog
             paintCell(currentCell, g, Color.GREEN);
             
             //bojenje zidova
             paintCells(wallCells, g, Color.BLACK);
+            
+            //bojanje pocetne i zavrsne celije
+            paintCells(startEndCells, g, Color.ORANGE);
 
             g.setColor(Color.BLACK);
             g.drawRect(cellSize, cellSize, width, height);
@@ -163,11 +231,25 @@ public class Form extends javax.swing.JFrame {
             repaint();
         }
         
+        public void addOpenedCell(Vertex v){
+            if(!openedCells.contains(v)){
+                openedCells.add(v);
+            }
+            repaint();
+        }
+        
         public void wallCell(int x, int y) {
             if(!wallCells.contains(new Vertex(x, y))) {
                 wallCells.add(new Vertex(x, y));
             }
             repaint();
+        }
+        
+        public void removeWallCell(int x, int y){
+            if(wallCells.contains(new Vertex(x, y))) {
+                wallCells.remove(new Vertex(x, y));
+                repaint();
+            }
         }
 
         public void visitedCell(int x, int y) {
@@ -188,28 +270,30 @@ public class Form extends javax.swing.JFrame {
         private void startButtonPushed(java.awt.event.ActionEvent evt) {
             
             // dodati kontrolu unosa //////////////////////////////////////////////!!!
-            StringTokenizer st = new StringTokenizer(start.getText());
-            int stX = Integer.parseInt(st.nextToken());
-            int stY = Integer.parseInt(st.nextToken());
-
-            StringTokenizer ste = new StringTokenizer(end.getText());
-            int enX = Integer.parseInt(ste.nextToken());
-            int enY = Integer.parseInt(ste.nextToken());
-
-            startX = stX;
-            startY = stY;
-            endX = enX;
-            endY = enY;
+            
+            //ako ne unesemo nista u tekstualni dio, mogli smo oznaciti s misom i tiupkom 's' start
+            if(start.getText() != null){
+                StringTokenizer st = new StringTokenizer(start.getText());
+                startX = Integer.parseInt(st.nextToken());
+                startY = Integer.parseInt(st.nextToken());
+            }
+            //ako nismo unijeli koordinate cilja, mogli smo ga oznaciti s klikom misa i tipkom 'e'
+            if(start.getText() != null){
+                StringTokenizer ste = new StringTokenizer(end.getText());
+                endX = Integer.parseInt(ste.nextToken());
+                endY = Integer.parseInt(ste.nextToken());
+            }
+            
             openedNodes.add(new Vertex(startX, startY)); // još u a* je vjj koristeno
             openedCells.add(new Vertex(startX, startY));
 
-            startEndCell(stX, stY);
-            startEndCell(enX, enY);
+            startEndCell(startX, startY);
+            startEndCell(endX, endY);
             //clock.start();
 
             if (algorithm.equals("A*")) {
                 //Dio koji poziva SwingWorkera koji pretrazuje graf u zasebnoj dretvi.
-                SwingWorker<Boolean, Vertex> dijsktraSearch = new PathWorker(this);
+                SwingWorker<Boolean, Vertex> dijsktraSearch = new AStarWorker(this);
                 dijsktraSearch.execute();
             }
             else if(algorithm.equals("findPath")) {
@@ -219,6 +303,10 @@ public class Form extends javax.swing.JFrame {
             else if(algorithm.equals("DFS") || algorithm.equals("BFS")) {
                 SwingWorker<Boolean, Vertex> xfsSearch = new XfsPathWorker(this);
                 xfsSearch.execute();
+            }
+            else if(algorithm.equals("Greedy best first search")){
+                SwingWorker<Boolean, Vertex> greedySearch = new GreedyBestFirstSearchWorker(this);
+                greedySearch.execute();
             }
             //dodati ovdje pokretanje workera za ostale algoritme
             //kada se dodaju, onda maknuti pozivanje koraka algoritma kod otkucaja sata
@@ -235,6 +323,7 @@ public class Form extends javax.swing.JFrame {
                 openedNodes.clear();
                 visitedNodes.clear();
                 visitedCells.clear();
+                wallCells.clear();
                 found = false;
                 currentCell = null;
                 repaint();
@@ -345,7 +434,7 @@ public class Form extends javax.swing.JFrame {
                 saveButton.addActionListener(new saveButtonPushed());
                 menu.add(saveButton);
 
-                String[] algorithmList = {"findPath", "BFS", "DFS", "A*", "Dijkstra"};
+                String[] algorithmList = {"findPath", "BFS", "DFS", "A*", "Dijkstra", "Greedy best first search"};
                 JComboBox<String> algorithmComboBox = new JComboBox<>(algorithmList);
                 algorithmComboBox.addActionListener(grid.new algorithmComboBoxSelected(algorithmComboBox));
                 menu.add(algorithmComboBox);

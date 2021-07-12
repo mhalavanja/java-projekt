@@ -1,13 +1,14 @@
+package projekt;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.swing.SwingWorker;
 
-public class PathWorker extends SwingWorker<Boolean, Vertex>{
+public class GreedyBestFirstSearchWorker extends SwingWorker<Boolean, Vertex>{
     
     Form.Grid proc;
     
-    PathWorker(Form.Grid proc){
+    GreedyBestFirstSearchWorker(Form.Grid proc){
         this.proc = proc;
     }
     
@@ -19,7 +20,7 @@ public class PathWorker extends SwingWorker<Boolean, Vertex>{
     
     @Override
     protected Boolean doInBackground() throws Exception{
-        //Implementacija A* algoritma.
+        //Implementacija "Najboljeg prvog" - Greedy best first search algoritma.
         
         //Na pocetku je u listi otvorenih vrhova samo pocetni cvor
         Vertex endNode = new Vertex(proc.endX, proc.endY);
@@ -30,13 +31,13 @@ public class PathWorker extends SwingWorker<Boolean, Vertex>{
         
         while(!proc.openedNodes.isEmpty()){
             
-            //Trebamo izabrati otvoren vrh s najkmanjom g+h vrijednosti. 
+            //Trebamo izabrati otvoren vrh s najmanjom heuristickom vrijednosti procejene udaljenosti. 
             //Bolje korisiti prioritetni red.
             double minDist = Double.MAX_VALUE;
-            //uzimamo Vertex s najmanjom sumom dosadasnjeg puta i procjene ostatka
+            //uzimamo Vertex s najmanjom  procjenom ostatka puta
             for(Vertex v : proc.openedNodes){
-                double tmp = v.getG() + v.getH();
-                if(tmp < minDist){
+                double tmp = v.getH();
+                if(tmp <= minDist){
                     minDist = tmp;
                     current = v;
                 }
@@ -61,21 +62,21 @@ public class PathWorker extends SwingWorker<Boolean, Vertex>{
                 int newY = current.getY() + pomakY[i];
                 
                 if (newX >= 0 && newY >= 0 && newX < proc.numOfX && newY < proc.numOfY) {
+                    
                     Vertex newPoint = new Vertex(newX, newY);
-                    if (!proc.visitedNodes.contains(newPoint)) {
+                    if(proc.wallCells.contains(newPoint))
+                        continue;
+                    if (!proc.visitedNodes.contains(newPoint) && !proc.openedNodes.contains(newPoint)) {
                         
+                        //newPoint je na putu za 1 udaljeniji od prethodnika current (tezine pomaka u mrezi su 1)
+                        newPoint.setG( current.getG() + 1 );
                         newPoint.setH( calcEuclideanDistance(newPoint, endNode) );
-                        if(proc.openedNodes.contains(newPoint)){
-                            var indeks = proc.openedNodes.indexOf(newPoint);
-                            Vertex point = proc.openedNodes.get(indeks);
-                            point.setH( Math.min(point.getH(), newPoint.getH()) );
-                        }
-                        else{
-                            //newPoint.setTag("opened");
-                            //publish(newPoint);
-                            proc.openedNodes.add(newPoint);
-                            proc.openedCell(newPoint.getX(), newPoint.getY());
-                        }
+                    
+                            
+                        proc.openedNodes.add(newPoint);
+                        //proc.openedCell(newPoint.getX(), newPoint.getY());
+                        proc.addOpenedCell(newPoint);
+
                     }
                 }
             }
@@ -92,8 +93,8 @@ public class PathWorker extends SwingWorker<Boolean, Vertex>{
         boolean pronadenPut;
         try{
             pronadenPut = get();
-            if(pronadenPut) System.out.println("Pronaden put (PathWorker)");
-            else System.out.println("Put nije pronaden (PathWorker)");
+            if(pronadenPut) System.out.println("Pronaden put (GreedyBestFirstSearchWorker)");
+            else System.out.println("Put nije pronaden (GreedyBestFirstSearchWorker)");
         }
         catch(InterruptedException e){}
         catch(ExecutionException e){}
