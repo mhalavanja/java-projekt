@@ -6,9 +6,9 @@ import javax.swing.SwingWorker;
 
 public class AStarWorker extends SwingWorker<Boolean, Vertex>{
     
-    Form.Grid proc;
+    Grid proc;
     
-    AStarWorker(Form.Grid proc){
+    AStarWorker(Grid proc){
         this.proc = proc;
     }
     

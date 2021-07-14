@@ -10,9 +10,9 @@ import javax.swing.SwingWorker;
 
 public class FindPathWorker extends SwingWorker<Boolean, Vertex>{
     
-    Form.Grid proc;
+    Grid proc;
     
-    FindPathWorker(Form.Grid proc){
+    FindPathWorker(Grid proc){
         this.proc = proc;
     }
     

@@ -1,24 +1,14 @@
 package projekt;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author Korisnik
- */
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.swing.SwingWorker;
 
 public class XfsPathWorker extends SwingWorker<Boolean, Vertex>{
     
-    Form.Grid proc;
+    Grid proc;
     
-    XfsPathWorker(Form.Grid proc){
+    XfsPathWorker(Grid proc){
         this.proc = proc;
     }
     

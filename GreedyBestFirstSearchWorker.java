@@ -6,9 +6,9 @@ import javax.swing.SwingWorker;
 
 public class GreedyBestFirstSearchWorker extends SwingWorker<Boolean, Vertex>{
     
-    Form.Grid proc;
+    Grid proc;
     
-    GreedyBestFirstSearchWorker(Form.Grid proc){
+    GreedyBestFirstSearchWorker(Grid proc){
         this.proc = proc;
     }
     

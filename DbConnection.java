@@ -1,3 +1,4 @@
+package projekt;
 import java.sql.*;
 
 public class DbConnection {
