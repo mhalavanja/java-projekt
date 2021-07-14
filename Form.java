@@ -34,6 +34,7 @@ public class Form extends javax.swing.JFrame {
 
     private void initialization(){
         grid = new Grid(this.algorithm);
+        grid.setName("grid");
         this.setSize(1200, 600); //560
         this.setLayout(new BorderLayout());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -41,6 +42,7 @@ public class Form extends javax.swing.JFrame {
         this.add(grid, BorderLayout.CENTER);
 
         menu = new JPanel();
+        menu.setName("menu");
         startCoordinetesLabel = new JLabel();
         startCoordinetesLabel.setText("Start node coordinates(numbers with space between):");
         endCoordinetesLabel = new JLabel();
@@ -53,43 +55,38 @@ public class Form extends javax.swing.JFrame {
         menu.add(endCoordinetesLabel);
         menu.add(grid.end);
 
-        startButton = new JButton();
-        startButton.setText("Start");
-        //startButton.addActionListener(grid.new startButtonPushed());
-        startButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                startButtonClicked(evt);
-            }
-        });
-        menu.add(startButton);
-
-        newButton = new JButton();
-        newButton.setText("New");
-        newButton.addActionListener(grid.new newButtonPushed());
-        menu.add(newButton);
+        
+       
 
         graphButton = new JButton();
+        graphButton.setName("graphButton");
         graphButton.setText("Graph");
         graphButton.addActionListener(new graphButtonPushed());
         menu.add(graphButton);
 
         saveButton = new JButton();
+        saveButton.setName("saveButton");
         saveButton.setText("Save");
         saveButton.addActionListener(new saveButtonPushed());
         menu.add(saveButton);
 
         String[] algorithmList = {"findPath", "BFS", "DFS", "A*", "Dijkstra", "Greedy best first search"};
         algorithmComboBox = new JComboBox<>(algorithmList);
+        algorithmComboBox.setName("algorithmComboBox");
         algorithmComboBox.addActionListener(new algorithmComboBoxSelected(algorithmComboBox));
-        //menu.add(algorithmComboBox);
+        
 
         this.add(menu, BorderLayout.SOUTH);
 
         toolBar = new JToolBar();
+        toolBar.setName("toolBar");
         toolBar.setOrientation(toolBar.VERTICAL);
+        
         vizualizacijaButton = new JRadioButton();
+        vizualizacijaButton.setName("vizualizacijaButton");
         vizualizacijaButton.setText("Choose one for visualization");
         vizualizacijaButton.setMargin(new Insets(20, 5, 5, 5));
+        vizualizacijaButton.setPreferredSize(new Dimension(190, 50));
         vizualizacijaButton.setSelected(true);
         vizualizacijaButton.addActionListener( new ActionListener(){
             public void actionPerformed(ActionEvent evt){
@@ -98,8 +95,10 @@ public class Form extends javax.swing.JFrame {
         } );
 
         izvrednjavanjeSvihButton = new JRadioButton();
+        izvrednjavanjeSvihButton.setName("izvrednjavanjeSvihButton");
         izvrednjavanjeSvihButton.setText("Run all without visualization");
         izvrednjavanjeSvihButton.setMargin(new Insets(0, 5, 30, 5));
+        izvrednjavanjeSvihButton.setPreferredSize(new Dimension(190, 50));
         izvrednjavanjeSvihButton.addActionListener( new ActionListener(){
             public void actionPerformed(ActionEvent evt){
                 runAllButtonClicked(evt);
@@ -114,8 +113,40 @@ public class Form extends javax.swing.JFrame {
         toolBar.add(vizualizacijaButton);
         toolBar.add(izvrednjavanjeSvihButton);
         toolBar.add(algorithmComboBox);
+        
+        
+        JPanel startPanel = new JPanel();
+        startButton = new JButton();
+        startButton.setName("startButton");
+        startButton.setText("Start");
+        startButton.setPreferredSize(new Dimension(130, 30));
+        //startButton.addActionListener(grid.new startButtonPushed());
+        startButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startButtonClicked(evt);
+            }
+        });
+        startPanel.add(startButton);
+        toolBar.add(startPanel);
 
+        JPanel restartPanel = new JPanel();
+        restartPanel.setLayout(new BorderLayout());
+        newButton = new JButton();
+        newButton.setName("newButton");
+        newButton.setText("New");
+        newButton.addActionListener(grid.new newButtonPushed());
+        
+        clearButton = new JButton();
+        clearButton.setName("clearButton");
+        clearButton.setText("Clear");
+        clearButton.addActionListener(grid.new clearButtonPushed());
+        restartPanel.add(newButton, BorderLayout.WEST);
+        restartPanel.add(clearButton, BorderLayout.EAST);
+        
+        toolBar.add(restartPanel);
+        
         this.add(toolBar, BorderLayout.WEST);
+        //pack();
     }
     
     
@@ -158,6 +189,7 @@ public class Form extends javax.swing.JFrame {
     protected JLabel endCoordinetesLabel;
     protected JButton startButton;
     protected JButton newButton;
+    protected JButton clearButton;
     protected JButton graphButton;
     protected JButton saveButton;
     protected JComboBox<String> algorithmComboBox;

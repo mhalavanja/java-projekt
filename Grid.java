@@ -54,6 +54,9 @@ public class Grid extends JPanel implements ActionListener{
             Vertex currentCell = null;
             this.algorithm = algorithm;
           
+            start.setName("start");
+            end.setName("end");
+            
             // klikom miša crtamo zid, trebalo bi dodat da samo funkcionira
             // od pokretanja aplikacije do start i od new do start (neki boolean)
             // ali to cemo valjda kad budemo sve gumbe regulirali kad mogu radit a kad ne
@@ -327,6 +330,20 @@ public class Grid extends JPanel implements ActionListener{
             }
         }
 
+        //Za razliku od new, clear metoda ostavlja oznacene zidove.
+        public class clearButtonPushed implements ActionListener{
+            @Override
+            public void actionPerformed(ActionEvent event){
+                startEndCells.clear();
+                openedCells.clear();
+                openedNodes.clear();
+                visitedNodes.clear();
+                visitedCells.clear();
+                found = false;
+                currentCell = null;
+                repaint();
+            }
+        }
         
         
     }
