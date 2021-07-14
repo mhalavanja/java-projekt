@@ -1,5 +1,4 @@
-package projekt;
-
+ 
 /**
  *
  * @author Korisnik
@@ -7,6 +6,7 @@ package projekt;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.swing.SwingWorker;
+import javax.swing.JOptionPane;
 
 public class FindPathWorker extends SwingWorker<Boolean, Vertex>{
     
@@ -21,6 +21,11 @@ public class FindPathWorker extends SwingWorker<Boolean, Vertex>{
         //Implementacija findPath
         
         while(!proc.found) {
+            if(proc.openedCells.isEmpty()) {
+                System.out.println("Put nije pronađen!");
+                JOptionPane.showMessageDialog(proc, "Put nije pronađen.", "Obavijest", JOptionPane.INFORMATION_MESSAGE);
+                return false;
+            }
             Vertex current = proc.openedCells.get(0);
 
             proc.visitedCell(current.getX(), current.getY());

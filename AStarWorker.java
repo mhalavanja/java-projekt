@@ -1,4 +1,3 @@
-package projekt;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -73,7 +72,7 @@ public class AStarWorker extends SwingWorker<Boolean, Vertex>{
                         newPoint.setH( calcEuclideanDistance(newPoint, endNode) );
                     
                         if(proc.openedNodes.contains(newPoint)){
-                            var indeks = proc.openedNodes.indexOf(newPoint);
+                            int indeks = proc.openedNodes.indexOf(newPoint);
                             Vertex point = proc.openedNodes.get(indeks);
                             
                             if(point.getG() > newPoint.getG()){

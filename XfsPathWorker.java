@@ -1,8 +1,8 @@
-package projekt;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.swing.SwingWorker;
+import javax.swing.JOptionPane;
 
 public class XfsPathWorker extends SwingWorker<Boolean, Vertex>{
     
@@ -17,6 +17,11 @@ public class XfsPathWorker extends SwingWorker<Boolean, Vertex>{
         //Implementacija bsf, dfs
         
         while(!proc.found) {
+            if(proc.openedCells.isEmpty()) {
+                System.out.println("Put nije pronađen!");
+                JOptionPane.showMessageDialog(proc, "Put nije pronađen.", "Obavijest", JOptionPane.INFORMATION_MESSAGE);
+                return false;
+            }
             //bfs i dfs se razlikuju samo jel uzimamo s početka ili s kraja liste
             int ind = 0;
             if (proc.algorithm.equals("DFS")) ind = proc.openedCells.size() - 1;
@@ -41,19 +46,27 @@ public class XfsPathWorker extends SwingWorker<Boolean, Vertex>{
 
             if (newX - 1 > -1) {
                 Vertex v = new Vertex(newX - 1, newY);
-                proc.openedCell(v.getX(), v.getY());
+                if(!proc.wallCells.contains(v)){
+                    proc.openedCell(v.getX(), v.getY());
+                }
             }
             if (newY - 1 > -1) {
                 Vertex v = new Vertex(newX, newY - 1);
-                proc.openedCell(v.getX(), v.getY());
+                if(!proc.wallCells.contains(v)) {
+                    proc.openedCell(v.getX(), v.getY());
+                }
             }
             if (newX + 1 < 80) {
                 Vertex v = new Vertex(newX + 1, newY);
-                proc.openedCell(v.getX(), v.getY());
+                if(!proc.wallCells.contains(v)) {
+                    proc.openedCell(v.getX(), v.getY());
+                }
             }
             if (newY + 1 < 50) {
                 Vertex v = new Vertex(newX, newY + 1);
-                proc.openedCell(v.getX(), v.getY());
+                if(!proc.wallCells.contains(v)) {
+                    proc.openedCell(v.getX(), v.getY());
+                }
             }
             
             //dodajemo sleep radi vizualizacije
