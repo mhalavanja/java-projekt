@@ -1,8 +1,5 @@
- 
-/**
- *
- * @author Korisnik
- */
+package src.main.java;
+
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.swing.SwingWorker;

@@ -1,12 +1,13 @@
+package src.main.java;
 
 /**
- * Klasa Vertex ce sluziti kao klasa Point u algoritmima pronalaska puta, samo sto jos
+ * Klasa src.main.java.Vertex ce sluziti kao klasa Point u algoritmima pronalaska puta, samo sto jos
  * treba imati informacije o prethodnom cvoru / roditelju te podatke o ukupnoj duzini
  * puta pronadenoj u odredenom trenutku.
  */
 public class Vertex implements Comparable<Vertex>{
     
-    //Koordinate tocke Vertex u prostoru.
+    //Koordinate tocke src.main.java.Vertex u prostoru.
     private int x, y;
     //g-stvarna cijena puta od pocetnog cvora do trenutnog
     //h-heuristicka (optimisticna) procjena cijene puta od trenutnog do ciljnog vrha
@@ -75,7 +76,7 @@ public class Vertex implements Comparable<Vertex>{
             return 1;
         }
         else if(g + h < v.getG() + v.getH()){
-            //trenutna ukupna procejna puta je manja kod pozivnog objekta Vertex
+            //trenutna ukupna procejna puta je manja kod pozivnog objekta src.main.java.Vertex
             return -1;
         }
         else{
@@ -99,5 +100,11 @@ public class Vertex implements Comparable<Vertex>{
         Vertex bVertex = (Vertex)b;
         
         return (x == bVertex.getX() && y == bVertex.getY());
+    }
+
+    @Override
+    public String toString() {
+        return "{(" + x + "," + y + ")" +
+                ", tag = " + tag + "}";
     }
 }

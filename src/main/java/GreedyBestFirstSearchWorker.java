@@ -1,3 +1,4 @@
+package src.main.java;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -33,7 +34,7 @@ public class GreedyBestFirstSearchWorker extends SwingWorker<Boolean, Vertex>{
             //Trebamo izabrati otvoren vrh s najmanjom heuristickom vrijednosti procejene udaljenosti. 
             //Bolje korisiti prioritetni red.
             double minDist = Double.MAX_VALUE;
-            //uzimamo Vertex s najmanjom  procjenom ostatka puta
+            //uzimamo src.main.java.Vertex s najmanjom  procjenom ostatka puta
             for(Vertex v : proc.openedNodes){
                 double tmp = v.getH();
                 if(tmp <= minDist){
@@ -92,8 +93,8 @@ public class GreedyBestFirstSearchWorker extends SwingWorker<Boolean, Vertex>{
         boolean pronadenPut;
         try{
             pronadenPut = get();
-            if(pronadenPut) System.out.println("Pronaden put (GreedyBestFirstSearchWorker)");
-            else System.out.println("Put nije pronaden (GreedyBestFirstSearchWorker)");
+            if(pronadenPut) System.out.println("Pronaden put (src.main.java.GreedyBestFirstSearchWorker)");
+            else System.out.println("Put nije pronaden (src.main.java.GreedyBestFirstSearchWorker)");
         }
         catch(InterruptedException e){}
         catch(ExecutionException e){}

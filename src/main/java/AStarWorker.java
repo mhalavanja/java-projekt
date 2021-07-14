@@ -1,7 +1,8 @@
+package src.main.java;
 
+import javax.swing.*;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import javax.swing.SwingWorker;
 
 public class AStarWorker extends SwingWorker<Boolean, Vertex>{
     
@@ -33,7 +34,7 @@ public class AStarWorker extends SwingWorker<Boolean, Vertex>{
             //Trebamo izabrati otvoren vrh s najmanjom g+h vrijednosti. 
             //Bolje korisiti prioritetni red.
             double minDist = Double.MAX_VALUE;
-            //uzimamo Vertex s najmanjom sumom dosadasnjeg puta i procjene ostatka
+            //uzimamo src.main.java.Vertex s najmanjom sumom dosadasnjeg puta i procjene ostatka
             for(Vertex v : proc.openedNodes){
                 double tmp = v.getG() + v.getH();
                 if(tmp <= minDist){
@@ -101,10 +102,11 @@ public class AStarWorker extends SwingWorker<Boolean, Vertex>{
     @Override
     protected void done(){
         boolean pronadenPut;
+        proc.found = true;
         try{
             pronadenPut = get();
-            if(pronadenPut) System.out.println("Pronaden put (AStarWorker)");
-            else System.out.println("Put nije pronaden (AStarWorker)");
+            if(pronadenPut) System.out.println("Pronaden put (src.main.java.AStarWorker)");
+            else System.out.println("Put nije pronaden (src.main.java.AStarWorker)");
         }
         catch(InterruptedException e){}
         catch(ExecutionException e){}

@@ -1,20 +1,9 @@
+package src.main.java;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.*;
-//import javax.swing.Timer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.util.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.plaf.basic.BasicComboBoxUI.KeyHandler;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
+import java.util.Objects;
 
 
 public class Form extends javax.swing.JFrame {
@@ -24,10 +13,9 @@ public class Form extends javax.swing.JFrame {
     //Oznacava odabir opcije: vizualizacija jednog algoritma ili pokretanje vise njih i spremanje u bazu
     final int visualization = 0, runAll = 1;
     int odabirOpcije = visualization;
-        
+
     public Form() {
         initComponents();
-        
         initialization();
     }
 
@@ -54,9 +42,6 @@ public class Form extends javax.swing.JFrame {
         menu.add(endCoordinetesLabel);
         menu.add(grid.end);
 
-        
-       
-
         graphButton = new JButton();
         graphButton.setName("graphButton");
         graphButton.setText("Graph");
@@ -73,14 +58,13 @@ public class Form extends javax.swing.JFrame {
         algorithmComboBox = new JComboBox<>(algorithmList);
         algorithmComboBox.setName("algorithmComboBox");
         algorithmComboBox.addActionListener(new algorithmComboBoxSelected(algorithmComboBox));
-        
 
         this.add(menu, BorderLayout.SOUTH);
 
         toolBar = new JToolBar();
         toolBar.setName("toolBar");
         toolBar.setOrientation(toolBar.VERTICAL);
-        
+
         vizualizacijaButton = new JRadioButton();
         vizualizacijaButton.setName("vizualizacijaButton");
         vizualizacijaButton.setText("Choose one for visualization");
