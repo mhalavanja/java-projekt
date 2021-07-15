@@ -1,6 +1,8 @@
-package projekt.db;
+package projekt;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DbConnection {
     static String imeBaze = "graphs.db";
@@ -54,11 +56,28 @@ public class DbConnection {
     public static String getGraphByName(String graphName) {
         String sql = "SELECT graphName, nodes FROM graphs WHERE graphName = ?";
         try {
-            Connection conn = DriverManager.getConnection(url);
+            setConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, graphName);
             ResultSet rs = pstmt.executeQuery(sql);
             return rs.getString("nodes");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    public static List<String> getAllGraphNames(String graphName) {
+        String sql = "SELECT graphName FROM graphs";
+        try {
+            setConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            List<String> graphNameList = new ArrayList<>();
+            while (rs.next()){
+                graphNameList.add(rs.getString("graphName"));
+            }
+            return graphNameList;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
