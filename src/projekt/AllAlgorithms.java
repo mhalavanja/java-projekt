@@ -3,15 +3,45 @@ package projekt;
 //Ova klasa sadrzi sve implementacije algoritama.
 
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 
 //Koristimo ju iskljucivo kada hocemo usporediti algoritme, nikad kod vizualizacije u grafickom sucelju.
 //Ukoliko ne pronademo put mozemo vratiti nesto primjerice new InfoAlgorithm(0,0,"NOtfounded");
 public class AllAlgorithms {
     
     public static InfoAlgorithm findPathAlgorithm(Grid proc){
-        //implementacija
-        //probna random povratna vrijednost
-        return new InfoAlgorithm(3, 5, "findPath");
+        // Implementacija findPath algoritma.
+        ArrayList<Vertex> mOpenedNodes = new ArrayList<>();
+        ArrayList<Vertex> mVisitedNodes = new ArrayList<>();
+        
+        mOpenedNodes.add(new Vertex(proc.startX,proc.startY));
+        
+        while(true) {
+            if(mOpenedNodes.isEmpty()) {
+                return new InfoAlgorithm(0, 0, "notFoundFP");
+            }
+            Vertex current = mOpenedNodes.get(0);
+
+            mVisitedNodes.add(current);
+            mOpenedNodes.remove(current);
+
+            for (int i = -1; i < 2; ++i) {
+                for (int j = -1; j < 2; ++j) {
+                    int newX = current.getX() + i;
+                    int newY = current.getY() + j;
+                    if (newX == proc.endX && newY == proc.endY) {
+                        return new InfoAlgorithm(mOpenedNodes.size(), mVisitedNodes.size(), "FindPath");
+                    }
+                    if (newX >= 0 && newY >= 0 && newX < proc.numOfX && newY < proc.numOfY) {
+                        Vertex newPoint = new Vertex(newX, newY);
+                        if (!mVisitedNodes.contains(newPoint) && !mOpenedNodes.contains(newPoint)
+                                && !proc.wallCells.contains(newPoint)) {
+                            mOpenedNodes.add(newPoint);
+                        }
+                    }
+                }
+            }
+        }
     }
     
     public static InfoAlgorithm greedyBestFirstSearchAlgorithm(Grid proc){
@@ -86,9 +116,77 @@ public class AllAlgorithms {
     }
     
     public static InfoAlgorithm dijkstraAlgorithm(Grid proc){
-        //implementacija
-        //probna random povratna vrijednost
-        return new InfoAlgorithm(5, 12, "Dijkstra");
+        // Implementacija Dijkstrinog algoritma.
+        ArrayList<Vertex> mOpenedNodes = new ArrayList<>();
+        ArrayList<Vertex> mVisitedNodes = new ArrayList<>();
+        
+        int numOfX = 80;
+        int numOfY = 50;
+        PriorityQueue<ComparableVertex> Q = new PriorityQueue<>(numOfX * numOfY);
+        Vertex start = new Vertex(proc.startX, proc.startY);
+        ComparableVertex compStart = new ComparableVertex(start, 0, false);
+        
+        for(int i = 0; i < numOfX; ++i) {
+            for(int j = 0; j < numOfY; ++j) {
+                if(new Vertex(i,j) != start) {
+                    Q.add(new ComparableVertex(new Vertex(i,j), 0, true));
+                }
+            }
+        }
+        Q.add(compStart);
+        
+        boolean isStartNode = true;
+        
+        while(!Q.isEmpty()) {
+            ComparableVertex min = Q.poll();
+            
+            if(min.isInfinity()) {
+                System.out.println("Put nije pronađen!");
+                return new InfoAlgorithm(0, 0, "notFoundDijkstra");
+            }
+            
+            if(proc.wallCells.contains(min.getVertex())) continue;
+            
+            if(min.getX() == proc.endX && min.getY() == proc.endY) {
+                System.out.println("Put pronađen.");
+                return new InfoAlgorithm(mOpenedNodes.size(), mVisitedNodes.size(), "Dijkstra");
+            }
+            
+            if(!isStartNode) {
+                mVisitedNodes.add(min.getVertex());
+                mOpenedNodes.remove(min.getVertex());
+            }
+            isStartNode = false;
+            
+            ArrayList<ComparableVertex> forRemove = new ArrayList<>();
+            ArrayList<ComparableVertex> forAdd = new ArrayList<>();
+            
+            
+            for(ComparableVertex v : Q) {
+                // tražimo sve susjede od min
+                if(( v.getX() == min.getX() - 1 && v.getY() == min.getY() ) || 
+                    ( v.getX() == min.getX() + 1 && v.getY() == min.getY() ) ||
+                     ( v.getX() == min.getX() && v.getY() == min.getY() - 1 ) ||
+                      (v.getX() == min.getX() && v.getY() == min.getY() + 1)) {
+                    int alt = min.getLength() + 1;
+                            
+                    if(v.isInfinity() || alt < v.getLength()) {
+                        ComparableVertex n = new ComparableVertex(v.getVertex(), alt, false);                     
+                        n.setPrevious(min.getVertex());
+                        forRemove.add(v);
+                        forAdd.add(n);
+                    }
+                }
+            }
+            for(ComparableVertex v : forRemove) {
+                Q.remove(v);
+            }
+            for(ComparableVertex v : forAdd) {
+                mOpenedNodes.add(v.getVertex());
+                Q.add(v);
+            }
+        }
+        return new InfoAlgorithm(0, 0, "notFoundDijkstra");
     }
     
     public static InfoAlgorithm aStarAlgorithm(Grid proc){
@@ -174,15 +272,112 @@ public class AllAlgorithms {
     }
     
     public static InfoAlgorithm bfsAlgorithm(Grid proc){
-        //implementacija
-        //probna random povratna vrijednost
-        return new InfoAlgorithm(13, 12, "BFS");
+        // Implementacija BFS algoritma.
+        ArrayList<Vertex> mOpenedNodes = new ArrayList<>();
+        ArrayList<Vertex> mVisitedNodes = new ArrayList<>();
+        
+        mOpenedNodes.add(new Vertex(proc.startX,proc.startY));
+        
+        while(true) {
+            if(mOpenedNodes.isEmpty()) {
+                return new InfoAlgorithm(0, 0, "notFoundBFS");
+            }
+            //bfs i dfs se razlikuju samo jel uzimamo s početka ili s kraja liste
+            Vertex current = mOpenedNodes.get(0);
+            
+            mVisitedNodes.add(current);
+            mOpenedNodes.remove(current);
+
+            int newX = current.getX();
+            int newY = current.getY();
+            if (newX == proc.endX && newY == proc.endY) {
+                return new InfoAlgorithm(mOpenedNodes.size(), mVisitedNodes.size(), "BFS");
+            }
+
+            if (newX - 1 > -1) {
+                Vertex v = new Vertex(newX - 1, newY);
+                if(!proc.wallCells.contains(v) && !mVisitedNodes.contains(v) 
+                        && !mOpenedNodes.contains(v)){
+                    mOpenedNodes.add(v);
+                }
+            }
+            if (newY - 1 > -1) {
+                Vertex v = new Vertex(newX, newY - 1);
+                if(!proc.wallCells.contains(v) && !mVisitedNodes.contains(v) 
+                        && !mOpenedNodes.contains(v)) {
+                    mOpenedNodes.add(v);
+                }
+            }
+            if (newX + 1 < 80) {
+                Vertex v = new Vertex(newX + 1, newY);
+                if(!proc.wallCells.contains(v) && !mVisitedNodes.contains(v) 
+                        && !mOpenedNodes.contains(v)) {
+                    mOpenedNodes.add(v);
+                }
+            }
+            if (newY + 1 < 50) {
+                Vertex v = new Vertex(newX, newY + 1);
+                if(!proc.wallCells.contains(v) && !mVisitedNodes.contains(v) 
+                        && !mOpenedNodes.contains(v)) {
+                    mOpenedNodes.add(v);
+                }
+            }
+        }
     }
     
     public static InfoAlgorithm dfsAlgorithm(Grid proc){
-        //implementacija
-        //probna random povratna vrijednost
-        return new InfoAlgorithm(10, 14, "DFS");
+        // Implementacija DFS algoritma.
+        ArrayList<Vertex> mOpenedNodes = new ArrayList<>();
+        ArrayList<Vertex> mVisitedNodes = new ArrayList<>();
+        
+        mOpenedNodes.add(new Vertex(proc.startX,proc.startY));
+        
+        while(true) {
+            if(mOpenedNodes.isEmpty()) {
+                return new InfoAlgorithm(0, 0, "notFoundDFS");
+            }
+            //bfs i dfs se razlikuju samo jel uzimamo s početka ili s kraja liste
+            int ind = mOpenedNodes.size() - 1;
+            Vertex current = mOpenedNodes.get(ind);
+            
+            mVisitedNodes.add(current);
+            mOpenedNodes.remove(current);
+
+            int newX = current.getX();
+            int newY = current.getY();
+            if (newX == proc.endX && newY == proc.endY) {
+                return new InfoAlgorithm(mOpenedNodes.size(), mVisitedNodes.size(), "DFS");
+            }
+
+            if (newX - 1 > -1) {
+                Vertex v = new Vertex(newX - 1, newY);
+                if(!proc.wallCells.contains(v) && !mVisitedNodes.contains(v) 
+                        && !mOpenedNodes.contains(v)){
+                    mOpenedNodes.add(v);
+                }
+            }
+            if (newY - 1 > -1) {
+                Vertex v = new Vertex(newX, newY - 1);
+                if(!proc.wallCells.contains(v) && !mVisitedNodes.contains(v) 
+                        && !mOpenedNodes.contains(v)) {
+                    mOpenedNodes.add(v);
+                }
+            }
+            if (newX + 1 < 80) {
+                Vertex v = new Vertex(newX + 1, newY);
+                if(!proc.wallCells.contains(v) && !mVisitedNodes.contains(v) 
+                        && !mOpenedNodes.contains(v)) {
+                    mOpenedNodes.add(v);
+                }
+            }
+            if (newY + 1 < 50) {
+                Vertex v = new Vertex(newX, newY + 1);
+                if(!proc.wallCells.contains(v) && !mVisitedNodes.contains(v)
+                        && !mOpenedNodes.contains(v)) {
+                    mOpenedNodes.add(v);
+                }
+            }
+        }
     }
     
     

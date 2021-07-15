@@ -165,7 +165,7 @@ public class Form extends javax.swing.JFrame {
         
         
         graphNames = new ArrayList<String>();
-        graphNames = DbConnection.getAllGraphNames();
+        //graphNames = DbConnection.getAllGraphNames();
         graphComboBox = new JComboBox<>(graphNames.toArray());
         graphComboBox.setName("graphComboBox");
         dbpanel.add(graphComboBox);

@@ -54,7 +54,8 @@ public class DijkstraWorker extends SwingWorker<Boolean, Vertex>{
             }
             
             if(!isStartNode) {
-                proc.openedCell(min.getX(),min.getY());
+                proc.visitedCell(min.getX(), min.getY());
+                proc.removeOpenedCell(min.getVertex());
             }
             isStartNode = false;
             
@@ -82,6 +83,7 @@ public class DijkstraWorker extends SwingWorker<Boolean, Vertex>{
                 Q.remove(v);
             }
             for(ComparableVertex v : forAdd) {
+                proc.openedCell(v.getX(),v.getY());
                 Q.add(v);
             }
             
