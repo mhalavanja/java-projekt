@@ -6,13 +6,20 @@
 package projekt;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
@@ -26,7 +33,9 @@ public class GraphForm extends javax.swing.JFrame {
     protected JPanel okvirSlike;
     protected JPanel donjiOkvir;
     protected JButton saveButton;
-    private JFileChooser jchooser;
+    protected JFileChooser jchooser;
+    protected JFreeChart barChart;
+    protected ChartPanel cp;
     
     protected ArrayList<Integer> brOtvorenih; 
     protected ArrayList<Integer> brZatvorenih;
@@ -61,8 +70,8 @@ public class GraphForm extends javax.swing.JFrame {
             dataset.addValue(brZatvorenih.get(i), "Zatvoreni cvorovi", algorithms.get(i));
         }
         
-        JFreeChart barChart = ChartFactory.createBarChart("Usporedba", "Algoritmi", "Broj vrhova", dataset, PlotOrientation.VERTICAL, true, true, false);
-        ChartPanel cp = new ChartPanel(barChart);
+        barChart = ChartFactory.createBarChart("Usporedba", "Algoritmi", "Broj vrhova", dataset, PlotOrientation.VERTICAL, true, true, false);
+        cp = new ChartPanel(barChart);
         cp.setPreferredSize(new Dimension(400, 400));
         cp.setVisible(true);
         okvirSlike.add(cp);
@@ -73,6 +82,8 @@ public class GraphForm extends javax.swing.JFrame {
         this.setLayout(new BorderLayout());
         
         jchooser = new JFileChooser();
+        //FileNameExtensionFilter filter = new FileNameExtensionFilter("PNG", "png");
+        //jchooser.setFileFilter(filter);
         
         okvirSlike = new JPanel();
         
@@ -81,8 +92,28 @@ public class GraphForm extends javax.swing.JFrame {
         donjiOkvir = new JPanel();
         saveButton = new JButton();
         saveButton.setText("Save image");
+        saveButton.addActionListener( new ActionListener(){
+            public void actionPerformed(ActionEvent evt){
+                saveButtonClicked(evt);
+            }
+        } );
         donjiOkvir.add(saveButton);
         this.add(donjiOkvir, BorderLayout.SOUTH);
+    }
+    
+    protected void saveButtonClicked(ActionEvent evt){
+        int resultSave = jchooser.showSaveDialog((Component)evt.getSource());
+        if(resultSave == JFileChooser.APPROVE_OPTION){
+            
+            File file = jchooser.getSelectedFile();
+            try{
+                System.out.println("Odabrano za spremanje: " + file.toString());
+                ChartUtils.saveChartAsPNG(file, barChart, 600, 400);
+            }
+            catch(IOException e){
+                System.out.println("Pogreska kod spremanja grafa u datoteku.");
+            }
+        }
     }
     
     /**

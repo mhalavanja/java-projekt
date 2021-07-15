@@ -313,11 +313,61 @@ public class Grid extends JPanel implements ActionListener{
         
         //Implementacija pokretanja svih algoritama i spremanja u bazu podataka.
         protected void startButtonPushedRunAll(ActionEvent evt){
-            //proba
-            ArrayList<Integer> otvoreni = new ArrayList<>(); otvoreni.add(8); otvoreni.add(16); otvoreni.add(4);
-            ArrayList<Integer> zatvoreni = new ArrayList<>(); zatvoreni.add(12); zatvoreni.add(30); zatvoreni.add(21);
-            ArrayList<String> algoritmi = new ArrayList<>(); algoritmi.add("BFS"); algoritmi.add("Dijkstra"); algoritmi.add("A Star");
+             //ako ne unesemo nista u tekstualni dio, mogli smo oznaciti s misom i tiupkom 's' start
+            if(start.getText() != null){
+                StringTokenizer st = new StringTokenizer(start.getText());
+                startX = Integer.parseInt(st.nextToken());
+                startY = Integer.parseInt(st.nextToken());
+            }
+            //ako nismo unijeli koordinate cilja, mogli smo ga oznaciti s klikom misa i tipkom 'e'
+            if(start.getText() != null){
+                StringTokenizer ste = new StringTokenizer(end.getText());
+                endX = Integer.parseInt(ste.nextToken());
+                endY = Integer.parseInt(ste.nextToken());
+            }
             
+            openedNodes.add(new Vertex(startX, startY)); // još u a* je vjj koristeno
+            openedCells.add(new Vertex(startX, startY));
+            
+            ArrayList<Integer> otvoreni = new ArrayList<>(); 
+            ArrayList<Integer> zatvoreni = new ArrayList<>(); 
+            ArrayList<String> algoritmi = new ArrayList<>(); 
+            
+            InfoAlgorithm info = AllAlgorithms.findPathAlgorithm(this);
+            otvoreni.add(info.getBrojOtvorenih());
+            zatvoreni.add(info.getBrojZatvorenih());
+            algoritmi.add(info.getAlgorithmName());
+            System.out.println(info.getAlgorithmName());
+            
+            info = AllAlgorithms.bfsAlgorithm(this);
+            otvoreni.add(info.getBrojOtvorenih());
+            zatvoreni.add(info.getBrojZatvorenih());
+            algoritmi.add(info.getAlgorithmName());
+            System.out.println(info.getAlgorithmName());
+            
+            info = AllAlgorithms.dfsAlgorithm(this);
+            otvoreni.add(info.getBrojOtvorenih());
+            zatvoreni.add(info.getBrojZatvorenih());
+            algoritmi.add(info.getAlgorithmName());
+            System.out.println(info.getAlgorithmName());
+            
+            info = AllAlgorithms.aStarAlgorithm(this);
+            otvoreni.add(info.getBrojOtvorenih());
+            zatvoreni.add(info.getBrojZatvorenih());
+            algoritmi.add(info.getAlgorithmName());
+            System.out.println(info.getAlgorithmName());
+            
+            info = AllAlgorithms.dijkstraAlgorithm(this);
+            otvoreni.add(info.getBrojOtvorenih());
+            zatvoreni.add(info.getBrojZatvorenih());
+            algoritmi.add(info.getAlgorithmName());
+            System.out.println(info.getAlgorithmName());
+            
+            info = AllAlgorithms.greedyBestFirstSearchAlgorithm(this);
+            otvoreni.add(info.getBrojOtvorenih());
+            zatvoreni.add(info.getBrojZatvorenih());
+            algoritmi.add(info.getAlgorithmName());
+            System.out.println(info.getAlgorithmName());
             
             GraphForm gf = new GraphForm(otvoreni, zatvoreni, algoritmi);
             gf.setVisible(true);
@@ -341,11 +391,10 @@ public class Grid extends JPanel implements ActionListener{
             }
         }
 
-        //Za razliku od new, clear metoda ostavlja oznacene zidove.
+        //Za razliku od new, clear metoda ostavlja oznacene zidove, te pocetak i kraj.
         public class clearButtonPushed implements ActionListener{
             @Override
             public void actionPerformed(ActionEvent event){
-                startEndCells.clear();
                 openedCells.clear();
                 openedNodes.clear();
                 visitedNodes.clear();
