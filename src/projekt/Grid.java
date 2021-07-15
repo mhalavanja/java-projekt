@@ -41,9 +41,12 @@ public class Grid extends JPanel implements ActionListener{
         //Varijabla pressedKey ce sluziti kod postavljanja Start i End vrha pretrage. Mozemo 
         //postaviti i da pretraga krene ukoliko se stisne space.
         protected char pressedKey = '-';
-        
 
-        JTextArea start = new JTextArea();
+    public boolean isFound() {
+        return found;
+    }
+
+    JTextArea start = new JTextArea();
         JTextArea end = new JTextArea();
         
 
