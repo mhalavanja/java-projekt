@@ -5,20 +5,24 @@
  */
 package projekt;
 
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.ChartUtilities;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.category.DefaultCategoryDataset;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JPanel;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartUtils;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
 
 /**
  *
@@ -104,7 +108,7 @@ public class GraphForm extends javax.swing.JFrame {
             File file = jchooser.getSelectedFile();
             try{
                 System.out.println("Odabrano za spremanje: " + file.toString());
-                ChartUtilities.saveChartAsPNG(file, barChart, 600, 400);
+                ChartUtils.saveChartAsPNG(file, barChart, 600, 400);
             }
             catch(IOException e){
                 System.out.println("Pogreska kod spremanja grafa u datoteku.");
