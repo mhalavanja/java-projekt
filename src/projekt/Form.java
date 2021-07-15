@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.StringTokenizer;
 
 
 public class Form extends javax.swing.JFrame {
@@ -23,6 +24,8 @@ public class Form extends javax.swing.JFrame {
     private void initialization(){
         
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        
+        //Konstruita
         
         grid = new Grid(this.algorithm);
         grid.setName("grid");
@@ -153,11 +156,16 @@ public class Form extends javax.swing.JFrame {
         saveGraphButton = new JButton();
         saveGraphButton.setText("Save graph");
         saveGraphButton.setPreferredSize(new Dimension(130, 30));
+        saveGraphButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                savegraphButtonClicked(evt);
+            }
+        });
         dbpanel.add(saveGraphButton);
         
         
         graphNames = new ArrayList<String>();
-        graphNames.add("---");
+        graphNames = DbConnection.getAllGraphNames();
         graphComboBox = new JComboBox<>(graphNames.toArray());
         graphComboBox.setName("graphComboBox");
         dbpanel.add(graphComboBox);
@@ -172,6 +180,36 @@ public class Form extends javax.swing.JFrame {
         //pack();
     }
     
+    private void savegraphButtonClicked(ActionEvent evt){
+        String imeGrafa = imeGrafaField.getText();
+        if(grid.checkInputCoordinates(grid.start.getText(), grid.end.getText())){
+            StringTokenizer st = new StringTokenizer(grid.start.getText());
+            int startX = Integer.parseInt(st.nextToken());
+            int startY = Integer.parseInt(st.nextToken());
+            
+            StringTokenizer ste = new StringTokenizer(grid.end.getText());
+            int endX = Integer.parseInt(ste.nextToken());
+            int endY = Integer.parseInt(ste.nextToken());
+            
+            StringBuffer strb = new StringBuffer();
+            strb.append(startX + " " + startY + " " + endX + " " + endY);
+            for(Vertex v : grid.wallCells){
+                strb.append(" " + v.getX() + " " + v.getY());
+            }
+            
+            String strBridovi = strb.toString();
+            DbConnection.upsertGraph(imeGrafa, strBridovi);
+            graphNames = DbConnection.getAllGraphNames();
+            graphComboBox = new JComboBox<>(graphNames.toArray());
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Neispravan unos koordinata početka i kraja pretrage!", "Upozorenje", JOptionPane.WARNING_MESSAGE);
+            grid.start.setText("");
+            grid.end.setText("");
+            
+            return;
+        }
+    }
     
     private void visualizationButtonClicked(ActionEvent evt){
         odabirOpcije = visualization;
@@ -269,6 +307,7 @@ public class Form extends javax.swing.JFrame {
             public void run() {
 
                 Form window = new Form();
+                DbConnection.createTables();
                 window.setVisible(true);
             }
         });

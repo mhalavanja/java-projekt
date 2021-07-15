@@ -67,13 +67,13 @@ public class DbConnection {
         return null;
     }
 
-    public static List<String> getAllGraphNames(String graphName) {
+    public static ArrayList<String> getAllGraphNames() {
         String sql = "SELECT graphName FROM graphs";
         try {
             setConnection();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-            List<String> graphNameList = new ArrayList<>();
+            ArrayList<String> graphNameList = new ArrayList<>();
             while (rs.next()){
                 graphNameList.add(rs.getString("graphName"));
             }

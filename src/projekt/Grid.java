@@ -368,7 +368,7 @@ public class Grid extends JPanel implements ActionListener{
         }
         
         //Provjerava unos podataka/koordinata za pocetak i kraj pretrage.
-        private boolean checkInputCoordinates(String startString, String endString){
+        protected boolean checkInputCoordinates(String startString, String endString){
             if(startString == null || endString == null)
                 return false;
             
