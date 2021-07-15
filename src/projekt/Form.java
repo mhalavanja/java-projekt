@@ -131,6 +131,7 @@ public class Form extends javax.swing.JFrame {
         
         toolBar.add(restartPanel);
         
+        
         this.add(toolBar, BorderLayout.WEST);
         //pack();
     }
