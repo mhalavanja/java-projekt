@@ -82,7 +82,7 @@ public class AllAlgorithms {
         
         }
         
-        return new InfoAlgorithm(10, 10, "GNOT");
+        return new InfoAlgorithm(0, 0, "notFoundGreedy");
     }
     
     public static InfoAlgorithm dijkstraAlgorithm(Grid proc){
@@ -170,7 +170,7 @@ public class AllAlgorithms {
             }
         
         }
-        return new InfoAlgorithm(10, 10, "NOT");
+        return new InfoAlgorithm(0, 0, "notFoundAStar");
     }
     
     public static InfoAlgorithm bfsAlgorithm(Grid proc){

@@ -85,7 +85,7 @@ public class DijkstraWorker extends SwingWorker<Boolean, Vertex>{
                 Q.add(v);
             }
             
-            Thread.sleep(50);
+            Thread.sleep(30);
         }
         return false;
     }        

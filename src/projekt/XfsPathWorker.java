@@ -71,7 +71,7 @@ public class XfsPathWorker extends SwingWorker<Boolean, Vertex>{
             }
             
             //dodajemo sleep radi vizualizacije
-            Thread.sleep(50);
+            Thread.sleep(30);
         }
         return false;
     }        

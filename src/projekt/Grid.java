@@ -139,18 +139,6 @@ public class Grid extends JPanel implements ActionListener{
         // možda za klik miša kasnije bude trebalo...
         @Override
         public void actionPerformed(ActionEvent arg0) {
-            // moze elseif-ovi u ovisnosti koji algoritam koristimo
-            /*
-            repaint();
-            
-            if (found) {
-                clock.stop();
-            } 
-            //ovo maknuti kad se prebaci na workera
-    
-            else if (algorithm.equals("BFS") || algorithm.equals("DFS")) {
-                xfs();
-            }*/
         }
         
 
