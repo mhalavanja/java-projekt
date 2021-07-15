@@ -1,14 +1,14 @@
-package projekt;
+package src.main.java;
 
+import javax.swing.*;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import javax.swing.SwingWorker;
 
-public class GreedyBestFirstSearchWorker extends SwingWorker<Boolean, Vertex>{
+public class AStarWorker extends SwingWorker<Boolean, Vertex>{
     
     Grid proc;
     
-    GreedyBestFirstSearchWorker(Grid proc){
+    AStarWorker(Grid proc){
         this.proc = proc;
     }
     
@@ -20,7 +20,7 @@ public class GreedyBestFirstSearchWorker extends SwingWorker<Boolean, Vertex>{
     
     @Override
     protected Boolean doInBackground() throws Exception{
-        //Implementacija "Najboljeg prvog" - Greedy best first search algoritma.
+        //Implementacija A* algoritma.
         
         //Na pocetku je u listi otvorenih vrhova samo pocetni cvor
         Vertex endNode = new Vertex(proc.endX, proc.endY);
@@ -31,12 +31,12 @@ public class GreedyBestFirstSearchWorker extends SwingWorker<Boolean, Vertex>{
         
         while(!proc.openedNodes.isEmpty()){
             
-            //Trebamo izabrati otvoren vrh s najmanjom heuristickom vrijednosti procejene udaljenosti. 
+            //Trebamo izabrati otvoren vrh s najmanjom g+h vrijednosti. 
             //Bolje korisiti prioritetni red.
             double minDist = Double.MAX_VALUE;
-            //uzimamo src.main.java.Vertex s najmanjom  procjenom ostatka puta
+            //uzimamo src.main.java.Vertex s najmanjom sumom dosadasnjeg puta i procjene ostatka
             for(Vertex v : proc.openedNodes){
-                double tmp = v.getH();
+                double tmp = v.getG() + v.getH();
                 if(tmp <= minDist){
                     minDist = tmp;
                     current = v;
@@ -66,17 +66,28 @@ public class GreedyBestFirstSearchWorker extends SwingWorker<Boolean, Vertex>{
                     Vertex newPoint = new Vertex(newX, newY);
                     if(proc.wallCells.contains(newPoint))
                         continue;
-                    if (!proc.visitedNodes.contains(newPoint) && !proc.openedNodes.contains(newPoint)) {
+                    if (!proc.visitedNodes.contains(newPoint)) {
                         
                         //newPoint je na putu za 1 udaljeniji od prethodnika current (tezine pomaka u mrezi su 1)
                         newPoint.setG( current.getG() + 1 );
                         newPoint.setH( calcEuclideanDistance(newPoint, endNode) );
                     
+                        if(proc.openedNodes.contains(newPoint)){
+                            int indeks = proc.openedNodes.indexOf(newPoint);
+                            Vertex point = proc.openedNodes.get(indeks);
                             
-                        proc.openedNodes.add(newPoint);
-                        //proc.openedCell(newPoint.getX(), newPoint.getY());
-                        proc.addOpenedCell(newPoint);
-
+                            if(point.getG() > newPoint.getG()){
+                                point.setG( newPoint.getG() );
+                                point.setH( newPoint.getH() );
+                            }                        }
+                        else{
+                            //newPoint.setTag("opened");
+                            //publish(newPoint);
+                            
+                            proc.openedNodes.add(newPoint);
+                            //proc.openedCell(newPoint.getX(), newPoint.getY());
+                            proc.addOpenedCell(newPoint);
+                        }
                     }
                 }
             }
@@ -91,10 +102,11 @@ public class GreedyBestFirstSearchWorker extends SwingWorker<Boolean, Vertex>{
     @Override
     protected void done(){
         boolean pronadenPut;
+        proc.found = true;
         try{
             pronadenPut = get();
-            if(pronadenPut) System.out.println("Pronaden put (src.main.java.GreedyBestFirstSearchWorker)");
-            else System.out.println("Put nije pronaden (src.main.java.GreedyBestFirstSearchWorker)");
+            if(pronadenPut) System.out.println("Pronaden put (src.main.java.AStarWorker)");
+            else System.out.println("Put nije pronaden (src.main.java.AStarWorker)");
         }
         catch(InterruptedException e){}
         catch(ExecutionException e){}

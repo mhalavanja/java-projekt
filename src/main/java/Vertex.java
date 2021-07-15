@@ -1,4 +1,4 @@
-package projekt;
+package src.main.java;
 
 /**
  * Klasa src.main.java.Vertex ce sluziti kao klasa Point u algoritmima pronalaska puta, samo sto jos
