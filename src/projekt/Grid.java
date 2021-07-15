@@ -301,7 +301,7 @@ public class Grid extends JPanel implements ActionListener{
             }
             else if(algorithm.equals("Greedy best first search")){
                 SwingWorker<Boolean, Vertex> greedySearch = new GreedyBestFirstSearchWorker(this);
-                greedySearch.execute();
+                greedySearch.execute(); 
             }
             //dodati ovdje pokretanje workera za ostale algoritme
             //kada se dodaju, onda maknuti pozivanje koraka algoritma kod otkucaja sata
@@ -309,7 +309,14 @@ public class Grid extends JPanel implements ActionListener{
         
         //Implementacija pokretanja svih algoritama i spremanja u bazu podataka.
         protected void startButtonPushedRunAll(ActionEvent evt){
-        
+            //proba
+            ArrayList<Integer> otvoreni = new ArrayList<>(); otvoreni.add(8); otvoreni.add(16); otvoreni.add(4);
+            ArrayList<Integer> zatvoreni = new ArrayList<>(); zatvoreni.add(12); zatvoreni.add(30); zatvoreni.add(21);
+            ArrayList<String> algoritmi = new ArrayList<>(); algoritmi.add("BFS"); algoritmi.add("Dijkstra"); algoritmi.add("A Star");
+            
+            
+            GraphForm gf = new GraphForm(otvoreni, zatvoreni, algoritmi);
+            gf.setVisible(true);
         }
 
         // nova pretraga -- čistimo sva potrebna polja i iscrtavamo ponovno mrežu

@@ -33,6 +33,9 @@ public class Form extends javax.swing.JFrame {
     }
 
     private void initialization(){
+        
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        
         grid = new Grid(this.algorithm);
         grid.setName("grid");
         this.setSize(1200, 600); //560
