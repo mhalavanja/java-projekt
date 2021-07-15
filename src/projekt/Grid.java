@@ -303,6 +303,10 @@ public class Grid extends JPanel implements ActionListener{
                 SwingWorker<Boolean, Vertex> greedySearch = new GreedyBestFirstSearchWorker(this);
                 greedySearch.execute(); 
             }
+            else if(algorithm.equals("Dijkstra")){
+                SwingWorker<Boolean, Vertex> dijkstraSearch = new DijkstraWorker(this);
+                dijkstraSearch.execute(); 
+            }
             //dodati ovdje pokretanje workera za ostale algoritme
             //kada se dodaju, onda maknuti pozivanje koraka algoritma kod otkucaja sata
         }

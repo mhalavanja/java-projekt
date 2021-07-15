@@ -102,11 +102,10 @@ public class AStarWorker extends SwingWorker<Boolean, Vertex>{
     @Override
     protected void done(){
         boolean pronadenPut;
-        proc.found = true;
         try{
             pronadenPut = get();
-            if(pronadenPut) System.out.println("Pronaden put (src.main.java.AStarWorker)");
-            else System.out.println("Put nije pronaden (src.main.java.AStarWorker)");
+            if(pronadenPut){ System.out.println("Pronaden put (src.main.java.AStarWorker)"); proc.found = true;}
+            else{ System.out.println("Put nije pronaden (src.main.java.AStarWorker)"); proc.found = false;}
         }
         catch(InterruptedException e){}
         catch(ExecutionException e){}

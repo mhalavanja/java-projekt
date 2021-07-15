@@ -1,4 +1,4 @@
-package src.test.java;
+package projekt;
 
 import org.assertj.swing.core.BasicComponentFinder;
 import org.assertj.swing.core.ComponentFinder;

@@ -1,3 +1,4 @@
+package projekt;
 
 public class ComparableVertex implements Comparable<ComparableVertex> {
     private Vertex v;
