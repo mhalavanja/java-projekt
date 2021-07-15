@@ -182,7 +182,7 @@ public class Form extends javax.swing.JFrame {
     
     private void savegraphButtonClicked(ActionEvent evt){
         String imeGrafa = imeGrafaField.getText();
-        if(grid.checkInputCoordinates(grid.start.getText(), grid.end.getText())){
+        if(grid.checkInputCoordinates(grid.start.getText(), grid.end.getText()) && imeGrafa != null){
             StringTokenizer st = new StringTokenizer(grid.start.getText());
             int startX = Integer.parseInt(st.nextToken());
             int startY = Integer.parseInt(st.nextToken());
@@ -203,7 +203,7 @@ public class Form extends javax.swing.JFrame {
             graphComboBox = new JComboBox<>(graphNames.toArray());
         }
         else{
-            JOptionPane.showMessageDialog(this, "Neispravan unos koordinata početka i kraja pretrage!", "Upozorenje", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Neispravan unos grafa!", "Upozorenje", JOptionPane.WARNING_MESSAGE);
             grid.start.setText("");
             grid.end.setText("");
             
