@@ -59,7 +59,7 @@ public class DbConnection {
             setConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, graphName);
-            ResultSet rs = pstmt.executeQuery(sql);
+            ResultSet rs = pstmt.executeQuery();
             return rs.getString("nodes");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
