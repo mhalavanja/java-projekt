@@ -3,6 +3,7 @@ package projekt;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.Objects;
 
 
@@ -130,7 +131,42 @@ public class Form extends javax.swing.JFrame {
         restartPanel.add(clearButton, BorderLayout.EAST);
         
         toolBar.add(restartPanel);
+        toolBar.addSeparator(new Dimension(10, 60));
         
+        JPanel dbpanel = new JPanel();
+        GridLayout glayout = new GridLayout(4,1);
+        glayout.setVgap(5);
+        dbpanel.setLayout(glayout);
+        
+        JPanel imeGrafaUnosPanel = new JPanel();
+        imeGrafaUnosPanel.setLayout(new BorderLayout());
+        JLabel porukaSpremanja = new JLabel();
+        porukaSpremanja.setText("Graph name: ");
+        imeGrafaUnosPanel.add(porukaSpremanja, BorderLayout.WEST);
+        
+        imeGrafaField = new JTextField();
+        imeGrafaField.setPreferredSize(new Dimension(120, 30));
+        //imeGrafaField.setMargin(new Insets(40,0,0,0));
+        imeGrafaUnosPanel.add(imeGrafaField, BorderLayout.EAST);
+        dbpanel.add(imeGrafaUnosPanel);
+        
+        saveGraphButton = new JButton();
+        saveGraphButton.setText("Save graph");
+        saveGraphButton.setPreferredSize(new Dimension(130, 30));
+        dbpanel.add(saveGraphButton);
+        
+        
+        graphNames = new ArrayList<String>();
+        graphNames.add("---");
+        graphComboBox = new JComboBox<>(graphNames.toArray());
+        graphComboBox.setName("graphComboBox");
+        dbpanel.add(graphComboBox);
+        
+        loadGraph = new JButton();
+        loadGraph.setText("Load graph");
+        dbpanel.add(loadGraph);
+        
+        toolBar.add(dbpanel);
         
         this.add(toolBar, BorderLayout.WEST);
         //pack();
@@ -184,6 +220,11 @@ public class Form extends javax.swing.JFrame {
     protected JRadioButton vizualizacijaButton;
     protected JRadioButton izvrednjavanjeSvihButton;
     protected ButtonGroup buttonGroup;
+    protected JTextField imeGrafaField;
+    protected JButton saveGraphButton;
+    protected ArrayList<String> graphNames;
+    protected JComboBox graphComboBox;
+    protected JButton loadGraph;
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

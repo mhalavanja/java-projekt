@@ -1,10 +1,22 @@
-package projekt;
+package projekt.db;
 
 import java.sql.*;
 
 public class DbConnection {
     static String imeBaze = "graphs.db";
     static String url = "jdbc:sqlite:" + imeBaze;
+    static Connection conn = null;
+
+    private static void setConnection() {
+        if (conn == null) {
+            try {
+                conn = DriverManager.getConnection(url);
+            } catch (
+                    SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
 
     public static void createTables() {
         String sql = """
@@ -13,8 +25,10 @@ public class DbConnection {
                  nodes TEXT NOT NULL
                  );
                 """;
-        try (Connection conn = DriverManager.getConnection(url);
-             Statement stmt = conn.createStatement()) {
+        try {
+            Connection conn = DriverManager.getConnection(url);
+            setConnection();
+            Statement stmt = conn.createStatement();
             if (conn != null) {
                 stmt.execute(sql);
             }
@@ -23,13 +37,14 @@ public class DbConnection {
         }
     }
 
-    public static void insert(String graphName, String nodes) {
-        String sql = "INSERT INTO graphs (graphName, nodes) VALUES( ? ,?);";
+    public static void upsertGraph(String graphName, String nodes) {
+        String sql = "INSERT INTO graphs (graphName, nodes) VALUES(?,?) ON CONFLICT(graphName) DO UPDATE SET nodes = ?;";
         try {
-            Connection conn = DriverManager.getConnection(url);
+            setConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, graphName);
             pstmt.setString(2, nodes);
+            pstmt.setString(3, nodes);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
