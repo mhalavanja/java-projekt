@@ -7,3 +7,4 @@ src/radnaverzija/
 target/
 java-projekt.iml
 graphs.db
+build/
