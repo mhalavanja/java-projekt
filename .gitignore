@@ -1,10 +1,8 @@
 .idea/
 projekt.iml
 out/
-<<<<<<< HEAD
 src/proba/
 src/pronalazakputaulabirintu/
 src/radnaverzija/
-=======
 target/
->>>>>>> 79fddc945cea4076a1d8a1b089bd6d1fe93d1dee
+java-projekt.iml
