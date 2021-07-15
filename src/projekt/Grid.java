@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.StringTokenizer;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
@@ -264,19 +265,20 @@ public class Grid extends JPanel implements ActionListener{
         //Implementiramo realizaciju pritiska gumba start kada zelimo prikazati jedan od algoritama.
         protected void startButtonPushedVisualization(java.awt.event.ActionEvent evt) {
             
-            // dodati kontrolu unosa //////////////////////////////////////////////!!!
-            
-            //ako ne unesemo nista u tekstualni dio, mogli smo oznaciti s misom i tiupkom 's' start
-            if(start.getText() != null){
+            if(checkInputCoordinates(start.getText(), end.getText())){
                 StringTokenizer st = new StringTokenizer(start.getText());
                 startX = Integer.parseInt(st.nextToken());
                 startY = Integer.parseInt(st.nextToken());
-            }
-            //ako nismo unijeli koordinate cilja, mogli smo ga oznaciti s klikom misa i tipkom 'e'
-            if(start.getText() != null){
+            
                 StringTokenizer ste = new StringTokenizer(end.getText());
                 endX = Integer.parseInt(ste.nextToken());
                 endY = Integer.parseInt(ste.nextToken());
+            }
+            else{
+                JOptionPane.showMessageDialog(this, "Neispravan unos koordinata početka i kraja pretrage!", "Upozorenje", JOptionPane.WARNING_MESSAGE);
+                start.setText("");
+                end.setText("");
+                return;
             }
             
             openedNodes.add(new Vertex(startX, startY)); // još u a* je vjj koristeno
@@ -314,16 +316,20 @@ public class Grid extends JPanel implements ActionListener{
         //Implementacija pokretanja svih algoritama i spremanja u bazu podataka.
         protected void startButtonPushedRunAll(ActionEvent evt){
              //ako ne unesemo nista u tekstualni dio, mogli smo oznaciti s misom i tiupkom 's' start
-            if(start.getText() != null){
+            if(checkInputCoordinates(start.getText(), end.getText())){
                 StringTokenizer st = new StringTokenizer(start.getText());
                 startX = Integer.parseInt(st.nextToken());
                 startY = Integer.parseInt(st.nextToken());
-            }
-            //ako nismo unijeli koordinate cilja, mogli smo ga oznaciti s klikom misa i tipkom 'e'
-            if(start.getText() != null){
+            
                 StringTokenizer ste = new StringTokenizer(end.getText());
                 endX = Integer.parseInt(ste.nextToken());
                 endY = Integer.parseInt(ste.nextToken());
+            }
+            else{
+                JOptionPane.showMessageDialog(this, "Neispravan unos koordinata početka i kraja pretrage!", "Upozorenje", JOptionPane.WARNING_MESSAGE);
+                start.setText("");
+                end.setText("");
+                return;
             }
             
             openedNodes.add(new Vertex(startX, startY)); // još u a* je vjj koristeno
@@ -371,6 +377,31 @@ public class Grid extends JPanel implements ActionListener{
             
             GraphForm gf = new GraphForm(otvoreni, zatvoreni, algoritmi);
             gf.setVisible(true);
+        }
+        
+        //Provjerava unos podataka/koordinata za pocetak i kraj pretrage.
+        private boolean checkInputCoordinates(String startString, String endString){
+            if(startString == null || endString == null)
+                return false;
+            
+            //startString i endString moraju biti  oblika "integer integer"
+            //ukoliko nije takav oblik dobit cemo iznimku koju hvatamo u catch dijelu
+            try{
+                StringTokenizer st1 = new StringTokenizer(startString);
+                StringTokenizer st2 = new StringTokenizer(endString);
+                for(int i = 0; i < 2; ++i){
+                    Integer.parseInt(st1.nextToken());
+                    Integer.parseInt(st2.nextToken());
+                }
+            }
+            catch(NumberFormatException e){
+                return false;
+            }
+            catch(Exception e){
+                return false;
+            }
+            
+            return true;
         }
 
         // nova pretraga -- čistimo sva potrebna polja i iscrtavamo ponovno mrežu
