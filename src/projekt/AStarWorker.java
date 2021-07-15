@@ -105,7 +105,11 @@ public class AStarWorker extends SwingWorker<Boolean, Vertex>{
         try{
             pronadenPut = get();
             if(pronadenPut){ System.out.println("Pronaden put (src.main.java.AStarWorker)"); proc.found = true;}
-            else{ System.out.println("Put nije pronaden (src.main.java.AStarWorker)"); proc.found = false;}
+            else{ 
+                System.out.println("Put nije pronaden (src.main.java.AStarWorker)"); 
+                proc.found = false;
+                JOptionPane.showMessageDialog(proc, "Put nije pronađen.", "Obavijest", JOptionPane.INFORMATION_MESSAGE);
+            }
         }
         catch(InterruptedException e){}
         catch(ExecutionException e){}

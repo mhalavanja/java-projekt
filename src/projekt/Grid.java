@@ -46,6 +46,7 @@ public class Grid extends JPanel implements ActionListener{
         JTextArea start = new JTextArea();
         JTextArea end = new JTextArea();
         
+        
 
         public Grid(String algorithm) {
             startEndCells = new ArrayList<>(2);
@@ -114,26 +115,6 @@ public class Grid extends JPanel implements ActionListener{
             this.addMouseListener(handler);
             this.addMouseMotionListener(handler);
             
-            KeyAdapter keyHandler = new KeyAdapter(){
-                //Pristiskom/drzanjem nekog gumba s tipkovnice pamtimo njegovu vrijednost - ukoliko se ne drzi 
-                //tipka defaultna vrijednost je '-' (taj nam znak nece sluziti za nikakvu akciju).
-                //Primjene su kod postavljanja stratnog i krajnjeg vrha, pokretanja algoritma sa space.
-                @Override
-                public void keyPressed(KeyEvent e){
-                    pressedKey = e.getKeyChar();
-                    System.out.println("Pritisnuta tipka " + pressedKey);
-                }
-                @Override
-                public void keyReleased(KeyEvent e){
-                    pressedKey = '-';
-                }
-                @Override
-                public void keyTyped(KeyEvent e){
-
-                    System.out.println("Pritisnuta tipka " + pressedKey);
-                }
-            };
-            this.addKeyListener(keyHandler);
         }
         
         // možda za klik miša kasnije bude trebalo...
@@ -141,7 +122,9 @@ public class Grid extends JPanel implements ActionListener{
         public void actionPerformed(ActionEvent arg0) {
         }
         
-
+        public boolean isFound(){
+            return found;
+        }
         
 
         private void paintCell(Vertex cell, Graphics g, Color color) {
@@ -377,9 +360,11 @@ public class Grid extends JPanel implements ActionListener{
             try{
                 StringTokenizer st1 = new StringTokenizer(startString);
                 StringTokenizer st2 = new StringTokenizer(endString);
+                int[] granice = {numOfX, numOfY};
                 for(int i = 0; i < 2; ++i){
-                    Integer.parseInt(st1.nextToken());
-                    Integer.parseInt(st2.nextToken());
+                    if(Integer.parseInt(st1.nextToken()) >= granice[i])
+                        return false;
+                    if(Integer.parseInt(st2.nextToken()) >= granice[i]);
                 }
             }
             catch(NumberFormatException e){
@@ -398,7 +383,7 @@ public class Grid extends JPanel implements ActionListener{
             @Override
             public void actionPerformed(ActionEvent event) {
 
-                startEndCells.clear();
+                startEndCells = new ArrayList<>();
                 openedCells.clear();
                 openedNodes.clear();
                 visitedNodes.clear();

@@ -40,8 +40,6 @@ public class DijkstraWorker extends SwingWorker<Boolean, Vertex>{
             ComparableVertex min = Q.poll();
             
             if(min.isInfinity()) {
-                System.out.println("Put nije pronađen!");
-                JOptionPane.showMessageDialog(proc, "Put nije pronađen.", "Obavijest", JOptionPane.INFORMATION_MESSAGE);
                 return false;
             }
             
@@ -97,8 +95,12 @@ public class DijkstraWorker extends SwingWorker<Boolean, Vertex>{
         boolean pronadenPut;
         try{
             pronadenPut = get();
-            if(pronadenPut) System.out.println("Pronaden put (DijkstraWorker)");
-            else System.out.println("Put nije pronaden (DijkstraWorker)");
+            if(pronadenPut){ System.out.println("Pronaden put (DijkstraWorker)"); proc.found = true;}
+            else {
+                System.out.println("Put nije pronaden (DijkstraWorker)");
+                JOptionPane.showMessageDialog(proc, "Put nije pronađen.", "Obavijest", JOptionPane.INFORMATION_MESSAGE);
+                proc.found = false;
+            }
         }
         catch(InterruptedException e){}
         catch(ExecutionException e){}

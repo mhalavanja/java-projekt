@@ -2,6 +2,7 @@ package projekt;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
 public class GreedyBestFirstSearchWorker extends SwingWorker<Boolean, Vertex>{
@@ -93,8 +94,12 @@ public class GreedyBestFirstSearchWorker extends SwingWorker<Boolean, Vertex>{
         boolean pronadenPut;
         try{
             pronadenPut = get();
-            if(pronadenPut) System.out.println("Pronaden put (src.main.java.GreedyBestFirstSearchWorker)");
-            else System.out.println("Put nije pronaden (src.main.java.GreedyBestFirstSearchWorker)");
+            if(pronadenPut){ System.out.println("Pronaden put (src.main.java.GreedyBestFirstSearchWorker)"); proc.found = true;}
+            else{ 
+                System.out.println("Put nije pronaden (src.main.java.GreedyBestFirstSearchWorker)");
+                JOptionPane.showMessageDialog(proc, "Put nije pronađen.", "Obavijest", JOptionPane.INFORMATION_MESSAGE);
+                proc.found = true;
+            }
         }
         catch(InterruptedException e){}
         catch(ExecutionException e){}

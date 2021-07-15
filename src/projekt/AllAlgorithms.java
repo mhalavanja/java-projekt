@@ -18,7 +18,7 @@ public class AllAlgorithms {
         
         while(true) {
             if(mOpenedNodes.isEmpty()) {
-                return new InfoAlgorithm(0, 0, "notFoundFP");
+                return new InfoAlgorithm(-1, -1, "findPath");
             }
             Vertex current = mOpenedNodes.get(0);
 
@@ -30,7 +30,7 @@ public class AllAlgorithms {
                     int newX = current.getX() + i;
                     int newY = current.getY() + j;
                     if (newX == proc.endX && newY == proc.endY) {
-                        return new InfoAlgorithm(mOpenedNodes.size(), mVisitedNodes.size(), "FindPath");
+                        return new InfoAlgorithm(mOpenedNodes.size(), mVisitedNodes.size(), "findPath");
                     }
                     if (newX >= 0 && newY >= 0 && newX < proc.numOfX && newY < proc.numOfY) {
                         Vertex newPoint = new Vertex(newX, newY);
@@ -80,7 +80,7 @@ public class AllAlgorithms {
             }
             //ako smo pronasli rjesenje vrati true
             if(current.equals(endNode))
-                return new InfoAlgorithm(mOpenedNodes.size(), mVisitedNodes.size(), "GreedySearch");
+                return new InfoAlgorithm(mOpenedNodes.size(), mVisitedNodes.size(), "Greedy");
             
             //oznaka closed ce sluziti u process funkciji koja ce ubaciti current u listu zatvorenih cvorova
             mVisitedNodes.add(current);
@@ -112,7 +112,7 @@ public class AllAlgorithms {
         
         }
         
-        return new InfoAlgorithm(0, 0, "notFoundGreedy");
+        return new InfoAlgorithm(-1, -1, "Greedy");
     }
     
     public static InfoAlgorithm dijkstraAlgorithm(Grid proc){
@@ -142,7 +142,7 @@ public class AllAlgorithms {
             
             if(min.isInfinity()) {
                 System.out.println("Put nije pronađen!");
-                return new InfoAlgorithm(0, 0, "notFoundDijkstra");
+                return new InfoAlgorithm(-1, -1, "Dijkstra");
             }
             
             if(proc.wallCells.contains(min.getVertex())) continue;
@@ -182,11 +182,12 @@ public class AllAlgorithms {
                 Q.remove(v);
             }
             for(ComparableVertex v : forAdd) {
-                mOpenedNodes.add(v.getVertex());
+                if(!proc.wallCells.contains(v.getVertex()))
+                    mOpenedNodes.add(v.getVertex());
                 Q.add(v);
             }
         }
-        return new InfoAlgorithm(0, 0, "notFoundDijkstra");
+        return new InfoAlgorithm(-1, -1, "Dijkstra");
     }
     
     public static InfoAlgorithm aStarAlgorithm(Grid proc){
@@ -268,7 +269,7 @@ public class AllAlgorithms {
             }
         
         }
-        return new InfoAlgorithm(0, 0, "notFoundAStar");
+        return new InfoAlgorithm(-1, -1, "AStar");
     }
     
     public static InfoAlgorithm bfsAlgorithm(Grid proc){
@@ -280,7 +281,7 @@ public class AllAlgorithms {
         
         while(true) {
             if(mOpenedNodes.isEmpty()) {
-                return new InfoAlgorithm(0, 0, "notFoundBFS");
+                return new InfoAlgorithm(-1, -1, "BFS");
             }
             //bfs i dfs se razlikuju samo jel uzimamo s početka ili s kraja liste
             Vertex current = mOpenedNodes.get(0);
@@ -334,7 +335,7 @@ public class AllAlgorithms {
         
         while(true) {
             if(mOpenedNodes.isEmpty()) {
-                return new InfoAlgorithm(0, 0, "notFoundDFS");
+                return new InfoAlgorithm(-1, -1, "DFS");
             }
             //bfs i dfs se razlikuju samo jel uzimamo s početka ili s kraja liste
             int ind = mOpenedNodes.size() - 1;

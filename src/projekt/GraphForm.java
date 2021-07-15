@@ -70,9 +70,9 @@ public class GraphForm extends javax.swing.JFrame {
             dataset.addValue(brZatvorenih.get(i), "Zatvoreni cvorovi", algorithms.get(i));
         }
         
-        barChart = ChartFactory.createBarChart("Usporedba", "Algoritmi", "Broj vrhova", dataset, PlotOrientation.VERTICAL, true, true, false);
+        barChart = ChartFactory.createBarChart("Usporedba algoritama pretrage", "Algoritmi", "Broj vrhova", dataset, PlotOrientation.VERTICAL, true, true, false);
         cp = new ChartPanel(barChart);
-        cp.setPreferredSize(new Dimension(400, 400));
+        cp.setPreferredSize(new Dimension(600, 400));
         cp.setVisible(true);
         okvirSlike.add(cp);
     }
@@ -131,11 +131,11 @@ public class GraphForm extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 589, Short.MAX_VALUE)
+            .addGap(0, 750, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 445, Short.MAX_VALUE)
+            .addGap(0, 481, Short.MAX_VALUE)
         );
 
         pack();
@@ -184,18 +184,3 @@ public class GraphForm extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 }
 
-class Pokretanje implements Runnable{
-    ArrayList<Integer> otvoreni;
-    ArrayList<Integer> zatvoreni;
-    ArrayList<String> algorithms;
-    
-    public Pokretanje(ArrayList<Integer> otv, ArrayList<Integer> zatv, ArrayList<String> algs){
-        otvoreni = otv;
-        zatvoreni = zatv;
-        algorithms = algs;
-    }
-    
-    public void run(){
-        new GraphForm(otvoreni, zatvoreni, algorithms).setVisible(true);
-    }
-}

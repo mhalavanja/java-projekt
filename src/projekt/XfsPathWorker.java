@@ -81,8 +81,12 @@ public class XfsPathWorker extends SwingWorker<Boolean, Vertex>{
         boolean pronadenPut;
         try{
             pronadenPut = get();
-            if(pronadenPut) System.out.println("Pronaden put (PathWorker)");
-            else System.out.println("Put nije pronaden (PathWorker)");
+            if(pronadenPut) {System.out.println("Pronaden put (PathWorker)"); proc.found = true;}
+            else{ 
+                System.out.println("Put nije pronaden (PathWorker)");
+                JOptionPane.showMessageDialog(proc, "Put nije pronađen.", "Obavijest", JOptionPane.INFORMATION_MESSAGE);
+                proc.found = true;
+            }
         }
         catch(InterruptedException e){}
         catch(ExecutionException e){}
