@@ -24,7 +24,6 @@ public class Form extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        //Konstruita
 
         grid = new Grid(this.algorithm);
         grid.setName("grid");

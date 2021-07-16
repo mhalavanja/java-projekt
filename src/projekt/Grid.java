@@ -21,7 +21,7 @@ import javax.swing.SwingWorker;
 
 // mreža proširuje objekt jPanel, u nju stavljamo sve potrebne elemente za rad 
 // algoritma pretrage
-public class Grid extends JPanel implements ActionListener{
+public class Grid extends JPanel{
 
         protected List<Vertex> startEndCells;
         protected List<Vertex> openedCells;
@@ -38,11 +38,6 @@ public class Grid extends JPanel implements ActionListener{
         protected boolean found = false;
         protected String algorithm = "";
         
-        //Varijabla pressedKey ce sluziti kod postavljanja Start i End vrha pretrage. Mozemo 
-        //postaviti i da pretraga krene ukoliko se stisne space.
-        protected char pressedKey = '-';
-        
-
         JTextArea start = new JTextArea();
         JTextArea end = new JTextArea();
         
@@ -59,9 +54,7 @@ public class Grid extends JPanel implements ActionListener{
             start.setName("start");
             end.setName("end");
             
-            // klikom miša crtamo zid, trebalo bi dodat da samo funkcionira
-            // od pokretanja aplikacije do start i od new do start (neki boolean)
-            // ali to cemo valjda kad budemo sve gumbe regulirali kad mogu radit a kad ne
+            
             MouseAdapter handler = new MouseAdapter() { 
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -71,20 +64,10 @@ public class Grid extends JPanel implements ActionListener{
                             
                             int positionX = e.getX()/cellSize -1;
                             int positionY = e.getY()/cellSize -1;
-                            //ako kliknemo lijevim klikom misa i drzimo tipku 'S' -> oznacavamo startni vrh
-                            if(pressedKey == 's'){
-                                System.out.println("S stisnut uz lijevi klik misa.");
-                                startX = positionX;
-                                startY = positionY;
-                            }
-                            else if(pressedKey == 'e'){
-                                endX = positionX;
-                                endY = positionY;
-                            }
-                            else{
-                                //Oznacili smo novi zid/prepreku.
-                                wallCell(positionX, positionY);
-                            }
+                            
+                            //Oznacili smo novi zid/prepreku.
+                            wallCell(positionX, positionY);
+                            
                         }
                     }
                     //Ukoliko stisnemo desni klik misa, micemo oznaceni zid.
@@ -116,11 +99,7 @@ public class Grid extends JPanel implements ActionListener{
             this.addMouseMotionListener(handler);
             
         }
-        
-        // možda za klik miša kasnije bude trebalo...
-        @Override
-        public void actionPerformed(ActionEvent arg0) {
-        }
+       
         
         public boolean isFound(){
             return found;
@@ -178,8 +157,6 @@ public class Grid extends JPanel implements ActionListener{
                 g.drawLine(cellSize, i, width + cellSize, i);
             }
         }
-        // nisam siguran je li treba dodati da ne ubacuje element ako ga već sadrži
-        // i je li 
         
         // dodavanje početnog i završnog čvora, potrebno za iscrtavanje
         // (početni i završni su crvene boje)
@@ -281,7 +258,6 @@ public class Grid extends JPanel implements ActionListener{
                 dijkstraSearch.execute(); 
             }
             //dodati ovdje pokretanje workera za ostale algoritme
-            //kada se dodaju, onda maknuti pozivanje koraka algoritma kod otkucaja sata
         }
         
         //Implementacija pokretanja svih algoritama i spremanja u bazu podataka.

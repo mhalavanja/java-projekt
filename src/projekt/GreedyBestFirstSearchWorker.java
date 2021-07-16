@@ -47,9 +47,6 @@ public class GreedyBestFirstSearchWorker extends SwingWorker<Boolean, Vertex>{
             if(current.equals(endNode))
                 return true;
             
-            //oznaka closed ce sluziti u process funkciji koja ce ubaciti current u listu zatvorenih cvorova
-            //current.setTag("closed");
-            //publish(current);
             proc.visitedNodes.add(current);
             proc.visitedCell(current.getX(), current.getY());
             proc.removeOpenedCell(current);
