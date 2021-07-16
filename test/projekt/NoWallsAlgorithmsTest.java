@@ -7,8 +7,6 @@ import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.assertj.swing.timing.Condition;
 import org.junit.Test;
-import src.main.java.Form;
-import src.main.java.Grid;
 
 import java.awt.*;
 

@@ -8,3 +8,4 @@ target/
 java-projekt.iml
 graphs.db
 build/
+dist/

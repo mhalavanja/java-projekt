@@ -136,6 +136,7 @@ public class Form extends javax.swing.JFrame {
 
         imeGrafaField = new JTextField();
         imeGrafaField.setPreferredSize(new Dimension(120, 30));
+        imeGrafaField.setName("imeGrafaField");
         //imeGrafaField.setMargin(new Insets(40,0,0,0));
         imeGrafaUnosPanel.add(imeGrafaField, BorderLayout.EAST);
         dbpanel.add(imeGrafaUnosPanel);
@@ -143,6 +144,7 @@ public class Form extends javax.swing.JFrame {
         saveGraphButton = new JButton();
         saveGraphButton.setText("Save graph");
         saveGraphButton.setPreferredSize(new Dimension(130, 30));
+        saveGraphButton.setName("saveGraphButton");
         saveGraphButton.addActionListener(evt -> saveGraphButtonClicked(evt));
         dbpanel.add(saveGraphButton);
 
@@ -155,6 +157,7 @@ public class Form extends javax.swing.JFrame {
 
         loadGraphButton = new JButton();
         loadGraphButton.setText("Load graph");
+        loadGraphButton.setName("loadGraphButton");
         loadGraphButton.addActionListener(evt -> loadGraphButtonClicked(evt));
         dbpanel.add(loadGraphButton);
 
